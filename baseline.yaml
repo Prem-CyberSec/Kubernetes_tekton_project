@@ -1,0 +1,4648 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"tekton.dev/v1","kind":"TaskRun","metadata":{"annotations":{},"name":"hello-task-run","namespace":"default"},"spec":{"taskRef":{"name":"hello"}}}
+      pipeline.tekton.dev/release: fcba522
+      tekton.dev/ready: READY
+    creationTimestamp: "2026-05-29T12:15:32Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/managed-by: tekton-pipelines
+      tekton.dev/task: hello
+      tekton.dev/taskRun: hello-task-run
+      tekton.dev/taskRunUID: 51543b5e-1ce1-4cfb-9d6e-e718395806cc
+    name: hello-task-run-pod
+    namespace: default
+    ownerReferences:
+    - apiVersion: tekton.dev/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: TaskRun
+      name: hello-task-run
+      uid: 51543b5e-1ce1-4cfb-9d6e-e718395806cc
+    resourceVersion: "23402"
+    uid: cc1cc116-e5a2-43fa-9ce2-f2c332aab068
+  spec:
+    activeDeadlineSeconds: 5400
+    containers:
+    - args:
+      - -wait_file
+      - /tekton/downward/ready
+      - -wait_file_content
+      - -post_file
+      - /tekton/run/0/out
+      - -termination_path
+      - /tekton/termination
+      - -step_metadata_dir
+      - /tekton/run/0/status
+      - -entrypoint
+      - /tekton/scripts/script-0-ckk8j
+      - --
+      command:
+      - /tekton/bin/entrypoint
+      image: alpine
+      imagePullPolicy: Always
+      name: step-echo
+      resources: {}
+      terminationMessagePath: /tekton/termination
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /tekton/scripts
+        name: tekton-internal-scripts
+        readOnly: true
+      - mountPath: /tekton/downward
+        name: tekton-internal-downward
+        readOnly: true
+      - mountPath: /tekton/creds
+        name: tekton-creds-init-home-0
+      - mountPath: /tekton/run/0
+        name: tekton-internal-run-0
+      - mountPath: /tekton/bin
+        name: tekton-internal-bin
+        readOnly: true
+      - mountPath: /workspace
+        name: tekton-internal-workspace
+      - mountPath: /tekton/home
+        name: tekton-internal-home
+      - mountPath: /tekton/results
+        name: tekton-internal-results
+      - mountPath: /tekton/steps
+        name: tekton-internal-steps
+        readOnly: true
+      - mountPath: /tekton/artifacts
+        name: tekton-internal-artifacts
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-ngm7p
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - /ko-app/entrypoint
+      - init
+      - /ko-app/entrypoint
+      - /tekton/bin/entrypoint
+      - step-echo
+      image: ghcr.io/tektoncd/pipeline/entrypoint-bff0a22da108bc2f16c818c97641a296:v1.6.0@sha256:255ea8fadab1481fbd1e562d9ac7d4008cd9515de5f952647c8959028c8990a0
+      imagePullPolicy: IfNotPresent
+      name: prepare
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /tekton/bin
+        name: tekton-internal-bin
+      - mountPath: /tekton/steps
+        name: tekton-internal-steps
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-ngm7p
+        readOnly: true
+      workingDir: /
+    - args:
+      - -c
+      - |
+        scriptfile="/tekton/scripts/script-0-ckk8j"
+        touch ${scriptfile} && chmod +x ${scriptfile}
+        cat > ${scriptfile} << '_EOF_'
+        IyEvYmluL3NoCmVjaG8gIkhlbGxvIFdvcmxkIgo=
+        _EOF_
+        /tekton/bin/entrypoint decode-script "${scriptfile}"
+      command:
+      - sh
+      image: cgr.dev/chainguard/busybox@sha256:19f02276bf8dbdd62f069b922f10c65262cc34b710eea26ff928129a736be791
+      imagePullPolicy: IfNotPresent
+      name: place-scripts
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /tekton/scripts
+        name: tekton-internal-scripts
+      - mountPath: /tekton/bin
+        name: tekton-internal-bin
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-ngm7p
+        readOnly: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - emptyDir: {}
+      name: tekton-internal-workspace
+    - emptyDir: {}
+      name: tekton-internal-home
+    - emptyDir: {}
+      name: tekton-internal-results
+    - emptyDir: {}
+      name: tekton-internal-steps
+    - emptyDir: {}
+      name: tekton-internal-artifacts
+    - emptyDir: {}
+      name: tekton-internal-scripts
+    - emptyDir: {}
+      name: tekton-internal-bin
+    - downwardAPI:
+        defaultMode: 420
+        items:
+        - fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.annotations['tekton.dev/ready']
+          path: ready
+      name: tekton-internal-downward
+    - emptyDir:
+        medium: Memory
+      name: tekton-creds-init-home-0
+    - emptyDir: {}
+      name: tekton-internal-run-0
+    - name: kube-api-access-ngm7p
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:15:37Z"
+      observedGeneration: 1
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:15:34Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:15:36Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:15:36Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:15:32Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://e11cc22f3be0f88dcf45eaab2b28325536410627a966264ed2801d2ddaec0a2c
+      image: alpine:latest
+      imageID: docker-pullable://alpine@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
+      lastState: {}
+      name: step-echo
+      ready: false
+      resources: {}
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://e11cc22f3be0f88dcf45eaab2b28325536410627a966264ed2801d2ddaec0a2c
+          exitCode: 0
+          finishedAt: "2026-05-29T12:15:35Z"
+          message: '[{"key":"StartedAt","value":"2026-05-29T12:15:35.757Z","type":3}]'
+          reason: Completed
+          startedAt: "2026-05-29T12:15:34Z"
+      volumeMounts:
+      - mountPath: /tekton/scripts
+        name: tekton-internal-scripts
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /tekton/downward
+        name: tekton-internal-downward
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /tekton/creds
+        name: tekton-creds-init-home-0
+      - mountPath: /tekton/run/0
+        name: tekton-internal-run-0
+      - mountPath: /tekton/bin
+        name: tekton-internal-bin
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /workspace
+        name: tekton-internal-workspace
+      - mountPath: /tekton/home
+        name: tekton-internal-home
+      - mountPath: /tekton/results
+        name: tekton-internal-results
+      - mountPath: /tekton/steps
+        name: tekton-internal-steps
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /tekton/artifacts
+        name: tekton-internal-artifacts
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-ngm7p
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    initContainerStatuses:
+    - containerID: docker://b838af81e57cecdf63e1bd8d70a0cab84c92148a214ba93940c58113f969f7ed
+      image: sha256:9ab2fcc3abd8f03d162e7a39bec3f2ef837366d039a69c39c6b07b8cc7d4bdd2
+      imageID: docker-pullable://ghcr.io/tektoncd/pipeline/entrypoint-bff0a22da108bc2f16c818c97641a296@sha256:255ea8fadab1481fbd1e562d9ac7d4008cd9515de5f952647c8959028c8990a0
+      lastState: {}
+      name: prepare
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://b838af81e57cecdf63e1bd8d70a0cab84c92148a214ba93940c58113f969f7ed
+          exitCode: 0
+          finishedAt: "2026-05-29T12:15:33Z"
+          reason: Completed
+          startedAt: "2026-05-29T12:15:32Z"
+      volumeMounts:
+      - mountPath: /tekton/bin
+        name: tekton-internal-bin
+      - mountPath: /tekton/steps
+        name: tekton-internal-steps
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-ngm7p
+        readOnly: true
+        recursiveReadOnly: Disabled
+    - containerID: docker://b4356d2a2dddb4746af05ecce57bd94542837aa55e9bb83135f17245527c96e5
+      image: sha256:de4aee9d163a31b5b3cd9b7b59648baa507d1ac4cfd4904011c4dedaab49214b
+      imageID: docker-pullable://cgr.dev/chainguard/busybox@sha256:19f02276bf8dbdd62f069b922f10c65262cc34b710eea26ff928129a736be791
+      lastState: {}
+      name: place-scripts
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: docker://b4356d2a2dddb4746af05ecce57bd94542837aa55e9bb83135f17245527c96e5
+          exitCode: 0
+          finishedAt: "2026-05-29T12:15:33Z"
+          reason: Completed
+          startedAt: "2026-05-29T12:15:33Z"
+      volumeMounts:
+      - mountPath: /tekton/scripts
+        name: tekton-internal-scripts
+      - mountPath: /tekton/bin
+        name: tekton-internal-bin
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-ngm7p
+        readOnly: true
+        recursiveReadOnly: Disabled
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.0.19
+    podIPs:
+    - ip: 10.244.0.19
+    qosClass: BestEffort
+    startTime: "2026-05-29T12:15:32Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-05-29T09:16:12Z"
+    generateName: coredns-7d764666f9-
+    generation: 1
+    labels:
+      k8s-app: kube-dns
+      pod-template-hash: 7d764666f9
+    name: coredns-7d764666f9-qplgn
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: coredns-7d764666f9
+      uid: b470600f-bcaf-42f2-935a-7eca0f82f834
+    resourceVersion: "18366"
+    uid: 1b15ded3-195d-417f-924f-262009164f1b
+  spec:
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: k8s-app
+                operator: In
+                values:
+                - kube-dns
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+    containers:
+    - args:
+      - -conf
+      - /etc/coredns/Corefile
+      image: registry.k8s.io/coredns/coredns:v1.13.1
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 5
+        httpGet:
+          path: /health
+          port: liveness-probe
+          scheme: HTTP
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      name: coredns
+      ports:
+      - containerPort: 53
+        name: dns
+        protocol: UDP
+      - containerPort: 53
+        name: dns-tcp
+        protocol: TCP
+      - containerPort: 9153
+        name: metrics
+        protocol: TCP
+      - containerPort: 8080
+        name: liveness-probe
+        protocol: TCP
+      - containerPort: 8181
+        name: readiness-probe
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /ready
+          port: readiness-probe
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          memory: 170Mi
+        requests:
+          cpu: 100m
+          memory: 70Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          add:
+          - NET_BIND_SERVICE
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/coredns
+        name: config-volume
+        readOnly: true
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xqmfd
+        readOnly: true
+    dnsPolicy: Default
+    enableServiceLinks: true
+    nodeName: minikube
+    nodeSelector:
+      kubernetes.io/os: linux
+    preemptionPolicy: PreemptLowerPriority
+    priority: 2000000000
+    priorityClassName: system-cluster-critical
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: coredns
+    serviceAccountName: coredns
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - key: CriticalAddonsOnly
+      operator: Exists
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        items:
+        - key: Corefile
+          path: Corefile
+        name: coredns
+      name: config-volume
+    - name: kube-api-access-xqmfd
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:47Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:12Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:49Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:49Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:12Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 100m
+        memory: 70Mi
+      containerID: docker://619e8485b53d7f563940bde163816e12e5925b2a13dadf0bc8f415014b626d5f
+      image: registry.k8s.io/coredns/coredns:v1.13.1
+      imageID: docker-pullable://registry.k8s.io/coredns/coredns@sha256:9b9128672209474da07c91439bf15ed704ae05ad918dd6454e5b6ae14e35fee6
+      lastState:
+        terminated:
+          containerID: docker://d758eb1a96ce25573e413e12fd416b8c8a9c7f355fcb752803f1af1c0e958c08
+          exitCode: 0
+          finishedAt: "2026-05-29T11:39:33Z"
+          reason: Completed
+          startedAt: "2026-05-29T09:16:13Z"
+      name: coredns
+      ready: true
+      resources:
+        limits:
+          memory: 170Mi
+        requests:
+          cpu: 100m
+          memory: 70Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T11:39:44Z"
+      volumeMounts:
+      - mountPath: /etc/coredns
+        name: config-volume
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xqmfd
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.11
+    podIPs:
+    - ip: 10.244.0.11
+    qosClass: Burstable
+    startTime: "2026-05-29T09:16:12Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubeadm.kubernetes.io/etcd.advertise-client-urls: https://192.168.49.2:2379
+      kubernetes.io/config.hash: 5ff8e3b06bbaa8cb7ebc2bf531e48a2f
+      kubernetes.io/config.mirror: 5ff8e3b06bbaa8cb7ebc2bf531e48a2f
+      kubernetes.io/config.seen: "2026-05-29T09:16:07.231624463Z"
+      kubernetes.io/config.source: file
+    creationTimestamp: "2026-05-29T09:16:07Z"
+    generation: 1
+    labels:
+      component: etcd
+      tier: control-plane
+    name: etcd-minikube
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      controller: true
+      kind: Node
+      name: minikube
+      uid: dcf9b123-4872-4407-b9bc-bbf0ec20464a
+    resourceVersion: "18477"
+    uid: f2609d2a-22a0-4787-a482-e877436631af
+  spec:
+    containers:
+    - command:
+      - etcd
+      - --advertise-client-urls=https://192.168.49.2:2379
+      - --cert-file=/var/lib/minikube/certs/etcd/server.crt
+      - --client-cert-auth=true
+      - --data-dir=/var/lib/minikube/etcd
+      - --feature-gates=InitialCorruptCheck=true
+      - --initial-advertise-peer-urls=https://192.168.49.2:2380
+      - --initial-cluster=minikube=https://192.168.49.2:2380
+      - --key-file=/var/lib/minikube/certs/etcd/server.key
+      - --listen-client-urls=https://127.0.0.1:2379,https://192.168.49.2:2379
+      - --listen-metrics-urls=http://127.0.0.1:2381
+      - --listen-peer-urls=https://192.168.49.2:2380
+      - --name=minikube
+      - --peer-cert-file=/var/lib/minikube/certs/etcd/peer.crt
+      - --peer-client-cert-auth=true
+      - --peer-key-file=/var/lib/minikube/certs/etcd/peer.key
+      - --peer-trusted-ca-file=/var/lib/minikube/certs/etcd/ca.crt
+      - --snapshot-count=10000
+      - --trusted-ca-file=/var/lib/minikube/certs/etcd/ca.crt
+      - --watch-progress-notify-interval=5s
+      image: registry.k8s.io/etcd:3.6.6-0
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 8
+        httpGet:
+          host: 127.0.0.1
+          path: /livez
+          port: probe-port
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 15
+      name: etcd
+      ports:
+      - containerPort: 2381
+        hostPort: 2381
+        name: probe-port
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          host: 127.0.0.1
+          path: /readyz
+          port: probe-port
+          scheme: HTTP
+        periodSeconds: 1
+        successThreshold: 1
+        timeoutSeconds: 15
+      resources:
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      startupProbe:
+        failureThreshold: 24
+        httpGet:
+          host: 127.0.0.1
+          path: /readyz
+          port: probe-port
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 15
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/lib/minikube/etcd
+        name: etcd-data
+      - mountPath: /var/lib/minikube/certs/etcd
+        name: etcd-certs
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 2000001000
+    priorityClassName: system-node-critical
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      seccompProfile:
+        type: RuntimeDefault
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      operator: Exists
+    volumes:
+    - hostPath:
+        path: /var/lib/minikube/certs/etcd
+        type: DirectoryOrCreate
+      name: etcd-certs
+    - hostPath:
+        path: /var/lib/minikube/etcd
+        type: DirectoryOrCreate
+      name: etcd-data
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:47Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:07Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:40:01Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:40:01Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:07Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 100m
+        memory: 100Mi
+      containerID: docker://e3e7396e54bde77daa2fa94963e45ec26f1348fab41a82a97baa8c02cdf1251f
+      image: registry.k8s.io/etcd:3.6.6-0
+      imageID: docker-pullable://registry.k8s.io/etcd@sha256:60a30b5d81b2217555e2cfb9537f655b7ba97220b99c39ee2e162a7127225890
+      lastState:
+        terminated:
+          containerID: docker://4c5463167acf1c6d2565228597d8aea47dba608209a2dd38ce856969f5d4c485
+          exitCode: 0
+          finishedAt: "2026-05-29T11:39:35Z"
+          reason: Completed
+          startedAt: "2026-05-29T09:16:02Z"
+      name: etcd
+      ready: true
+      resources:
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T11:39:43Z"
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    phase: Running
+    podIP: 192.168.49.2
+    podIPs:
+    - ip: 192.168.49.2
+    qosClass: Burstable
+    startTime: "2026-05-29T09:16:07Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 192.168.49.2:8443
+      kubernetes.io/config.hash: a6dc00f40d27725f15407f95751ce5f7
+      kubernetes.io/config.mirror: a6dc00f40d27725f15407f95751ce5f7
+      kubernetes.io/config.seen: "2026-05-29T09:16:00.740299229Z"
+      kubernetes.io/config.source: file
+    creationTimestamp: "2026-05-29T09:16:06Z"
+    generation: 1
+    labels:
+      component: kube-apiserver
+      tier: control-plane
+    name: kube-apiserver-minikube
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      controller: true
+      kind: Node
+      name: minikube
+      uid: dcf9b123-4872-4407-b9bc-bbf0ec20464a
+    resourceVersion: "18465"
+    uid: c502c6bb-ff0e-46c8-8b99-a125efc6055c
+  spec:
+    containers:
+    - command:
+      - kube-apiserver
+      - --advertise-address=192.168.49.2
+      - --allow-privileged=true
+      - --authorization-mode=Node,RBAC
+      - --client-ca-file=/var/lib/minikube/certs/ca.crt
+      - --enable-bootstrap-token-auth=true
+      - --etcd-cafile=/var/lib/minikube/certs/etcd/ca.crt
+      - --etcd-certfile=/var/lib/minikube/certs/apiserver-etcd-client.crt
+      - --etcd-keyfile=/var/lib/minikube/certs/apiserver-etcd-client.key
+      - --etcd-servers=https://127.0.0.1:2379
+      - --kubelet-client-certificate=/var/lib/minikube/certs/apiserver-kubelet-client.crt
+      - --kubelet-client-key=/var/lib/minikube/certs/apiserver-kubelet-client.key
+      - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+      - --proxy-client-cert-file=/var/lib/minikube/certs/front-proxy-client.crt
+      - --proxy-client-key-file=/var/lib/minikube/certs/front-proxy-client.key
+      - --requestheader-allowed-names=front-proxy-client
+      - --requestheader-client-ca-file=/var/lib/minikube/certs/front-proxy-ca.crt
+      - --requestheader-extra-headers-prefix=X-Remote-Extra-
+      - --requestheader-group-headers=X-Remote-Group
+      - --requestheader-username-headers=X-Remote-User
+      - --secure-port=8443
+      - --service-account-issuer=https://kubernetes.default.svc.cluster.local
+      - --service-account-key-file=/var/lib/minikube/certs/sa.pub
+      - --service-account-signing-key-file=/var/lib/minikube/certs/sa.key
+      - --service-cluster-ip-range=10.96.0.0/12
+      - --tls-cert-file=/var/lib/minikube/certs/apiserver.crt
+      - --tls-private-key-file=/var/lib/minikube/certs/apiserver.key
+      - --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota
+      image: registry.k8s.io/kube-apiserver:v1.35.1
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 8
+        httpGet:
+          host: 192.168.49.2
+          path: /livez
+          port: probe-port
+          scheme: HTTPS
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 15
+      name: kube-apiserver
+      ports:
+      - containerPort: 8443
+        hostPort: 8443
+        name: probe-port
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          host: 192.168.49.2
+          path: /readyz
+          port: probe-port
+          scheme: HTTPS
+        periodSeconds: 1
+        successThreshold: 1
+        timeoutSeconds: 15
+      resources:
+        requests:
+          cpu: 250m
+      startupProbe:
+        failureThreshold: 24
+        httpGet:
+          host: 192.168.49.2
+          path: /livez
+          port: probe-port
+          scheme: HTTPS
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 15
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/ssl/certs
+        name: ca-certs
+        readOnly: true
+      - mountPath: /etc/ca-certificates
+        name: etc-ca-certificates
+        readOnly: true
+      - mountPath: /var/lib/minikube/certs
+        name: k8s-certs
+        readOnly: true
+      - mountPath: /usr/local/share/ca-certificates
+        name: usr-local-share-ca-certificates
+        readOnly: true
+      - mountPath: /usr/share/ca-certificates
+        name: usr-share-ca-certificates
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 2000001000
+    priorityClassName: system-node-critical
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      seccompProfile:
+        type: RuntimeDefault
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      operator: Exists
+    volumes:
+    - hostPath:
+        path: /etc/ssl/certs
+        type: DirectoryOrCreate
+      name: ca-certs
+    - hostPath:
+        path: /etc/ca-certificates
+        type: DirectoryOrCreate
+      name: etc-ca-certificates
+    - hostPath:
+        path: /var/lib/minikube/certs
+        type: DirectoryOrCreate
+      name: k8s-certs
+    - hostPath:
+        path: /usr/local/share/ca-certificates
+        type: DirectoryOrCreate
+      name: usr-local-share-ca-certificates
+    - hostPath:
+        path: /usr/share/ca-certificates
+        type: DirectoryOrCreate
+      name: usr-share-ca-certificates
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:46Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:07Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:56Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:56Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:07Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 250m
+      containerID: docker://9071788d903032125400e24fd6bb69b4555ef91d85dd46a2e8e93211d19786d9
+      image: registry.k8s.io/kube-apiserver:v1.35.1
+      imageID: docker-pullable://registry.k8s.io/kube-apiserver@sha256:011838b85f65454b95a013b2b902dd506789fd07f9abc84e52eb2b6a044cd392
+      lastState:
+        terminated:
+          containerID: docker://8f98df8629f4e8a06d2e57f21a755ddbc3fbf31ab49ec9253155d9ad079dfa63
+          exitCode: 137
+          finishedAt: "2026-05-29T11:39:39Z"
+          reason: Error
+          startedAt: "2026-05-29T09:16:02Z"
+      name: kube-apiserver
+      ready: true
+      resources:
+        requests:
+          cpu: 250m
+          memory: "0"
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T11:39:43Z"
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    phase: Running
+    podIP: 192.168.49.2
+    podIPs:
+    - ip: 192.168.49.2
+    qosClass: Burstable
+    startTime: "2026-05-29T09:16:07Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/config.hash: 740363cf4388c2d0df59fc97f96b889c
+      kubernetes.io/config.mirror: 740363cf4388c2d0df59fc97f96b889c
+      kubernetes.io/config.seen: "2026-05-29T09:16:07.231631740Z"
+      kubernetes.io/config.source: file
+    creationTimestamp: "2026-05-29T09:16:07Z"
+    generation: 1
+    labels:
+      component: kube-controller-manager
+      tier: control-plane
+    name: kube-controller-manager-minikube
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      controller: true
+      kind: Node
+      name: minikube
+      uid: dcf9b123-4872-4407-b9bc-bbf0ec20464a
+    resourceVersion: "18464"
+    uid: 77c1789f-49e7-4bba-ae50-671bd2fbd58c
+  spec:
+    containers:
+    - command:
+      - kube-controller-manager
+      - --authentication-kubeconfig=/etc/kubernetes/controller-manager.conf
+      - --authorization-kubeconfig=/etc/kubernetes/controller-manager.conf
+      - --bind-address=127.0.0.1
+      - --client-ca-file=/var/lib/minikube/certs/ca.crt
+      - --cluster-cidr=10.244.0.0/16
+      - --cluster-name=mk
+      - --cluster-signing-cert-file=/var/lib/minikube/certs/ca.crt
+      - --cluster-signing-key-file=/var/lib/minikube/certs/ca.key
+      - --controllers=*,bootstrapsigner,tokencleaner
+      - --kubeconfig=/etc/kubernetes/controller-manager.conf
+      - --requestheader-client-ca-file=/var/lib/minikube/certs/front-proxy-ca.crt
+      - --root-ca-file=/var/lib/minikube/certs/ca.crt
+      - --service-account-private-key-file=/var/lib/minikube/certs/sa.key
+      - --service-cluster-ip-range=10.96.0.0/12
+      - --use-service-account-credentials=true
+      - --allocate-node-cidrs=true
+      - --leader-elect=false
+      image: registry.k8s.io/kube-controller-manager:v1.35.1
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 8
+        httpGet:
+          host: 127.0.0.1
+          path: /healthz
+          port: probe-port
+          scheme: HTTPS
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 15
+      name: kube-controller-manager
+      ports:
+      - containerPort: 10257
+        hostPort: 10257
+        name: probe-port
+        protocol: TCP
+      resources:
+        requests:
+          cpu: 200m
+      startupProbe:
+        failureThreshold: 24
+        httpGet:
+          host: 127.0.0.1
+          path: /healthz
+          port: probe-port
+          scheme: HTTPS
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 15
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/ssl/certs
+        name: ca-certs
+        readOnly: true
+      - mountPath: /etc/ca-certificates
+        name: etc-ca-certificates
+        readOnly: true
+      - mountPath: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
+        name: flexvolume-dir
+      - mountPath: /var/lib/minikube/certs
+        name: k8s-certs
+        readOnly: true
+      - mountPath: /etc/kubernetes/controller-manager.conf
+        name: kubeconfig
+        readOnly: true
+      - mountPath: /usr/local/share/ca-certificates
+        name: usr-local-share-ca-certificates
+        readOnly: true
+      - mountPath: /usr/share/ca-certificates
+        name: usr-share-ca-certificates
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 2000001000
+    priorityClassName: system-node-critical
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      seccompProfile:
+        type: RuntimeDefault
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      operator: Exists
+    volumes:
+    - hostPath:
+        path: /etc/ssl/certs
+        type: DirectoryOrCreate
+      name: ca-certs
+    - hostPath:
+        path: /etc/ca-certificates
+        type: DirectoryOrCreate
+      name: etc-ca-certificates
+    - hostPath:
+        path: /usr/libexec/kubernetes/kubelet-plugins/volume/exec
+        type: DirectoryOrCreate
+      name: flexvolume-dir
+    - hostPath:
+        path: /var/lib/minikube/certs
+        type: DirectoryOrCreate
+      name: k8s-certs
+    - hostPath:
+        path: /etc/kubernetes/controller-manager.conf
+        type: FileOrCreate
+      name: kubeconfig
+    - hostPath:
+        path: /usr/local/share/ca-certificates
+        type: DirectoryOrCreate
+      name: usr-local-share-ca-certificates
+    - hostPath:
+        path: /usr/share/ca-certificates
+        type: DirectoryOrCreate
+      name: usr-share-ca-certificates
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:47Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:07Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:56Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:56Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:07Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 200m
+      containerID: docker://ca663b869f08452784b3d295dd4119821d4d7faabc4b90a225cda46dbe26f109
+      image: registry.k8s.io/kube-controller-manager:v1.35.1
+      imageID: docker-pullable://registry.k8s.io/kube-controller-manager@sha256:9fb295baa9d68543d7bbecc23e16fcdf85c8c06680f91e628535aa6fbe180dbd
+      lastState:
+        terminated:
+          containerID: docker://a74d51a096e2de491ad16fc40eff805e3ecbd7667d199482efad961469b6ab43
+          exitCode: 2
+          finishedAt: "2026-05-29T11:39:29Z"
+          reason: Error
+          startedAt: "2026-05-29T09:16:02Z"
+      name: kube-controller-manager
+      ready: true
+      resources:
+        requests:
+          cpu: 200m
+          memory: "0"
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T11:39:42Z"
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    phase: Running
+    podIP: 192.168.49.2
+    podIPs:
+    - ip: 192.168.49.2
+    qosClass: Burstable
+    startTime: "2026-05-29T09:16:07Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-05-29T09:16:12Z"
+    generateName: kube-proxy-
+    generation: 1
+    labels:
+      controller-revision-hash: 9b7b96d6c
+      k8s-app: kube-proxy
+      pod-template-generation: "1"
+    name: kube-proxy-4htv5
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DaemonSet
+      name: kube-proxy
+      uid: 5377c059-ac32-4d63-9429-61820bd7c29d
+    resourceVersion: "18384"
+    uid: 20c1ef0b-3747-4c6d-a50d-dfe439583c01
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchFields:
+            - key: metadata.name
+              operator: In
+              values:
+              - minikube
+    containers:
+    - command:
+      - /usr/local/bin/kube-proxy
+      - --config=/var/lib/kube-proxy/config.conf
+      - --hostname-override=$(NODE_NAME)
+      env:
+      - name: NODE_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: spec.nodeName
+      image: registry.k8s.io/kube-proxy:v1.35.1
+      imagePullPolicy: IfNotPresent
+      name: kube-proxy
+      resources: {}
+      securityContext:
+        privileged: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/lib/kube-proxy
+        name: kube-proxy
+      - mountPath: /run/xtables.lock
+        name: xtables-lock
+      - mountPath: /lib/modules
+        name: lib-modules
+        readOnly: true
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-775hk
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    nodeName: minikube
+    nodeSelector:
+      kubernetes.io/os: linux
+    preemptionPolicy: PreemptLowerPriority
+    priority: 2000001000
+    priorityClassName: system-node-critical
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: kube-proxy
+    serviceAccountName: kube-proxy
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/disk-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/pid-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/unschedulable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/network-unavailable
+      operator: Exists
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: kube-proxy
+      name: kube-proxy
+    - hostPath:
+        path: /run/xtables.lock
+        type: FileOrCreate
+      name: xtables-lock
+    - hostPath:
+        path: /lib/modules
+        type: ""
+      name: lib-modules
+    - name: kube-api-access-775hk
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:47Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:12Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:47Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:47Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:12Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://492c1d985636fc728162fb4dd8c2f6371dece2ed984dbe42aa79ab16402cbe95
+      image: registry.k8s.io/kube-proxy:v1.35.1
+      imageID: docker-pullable://registry.k8s.io/kube-proxy@sha256:a832f1cece7252b2e52294be5a59b7579ccde35202ad63e09e9f4f04c5676435
+      lastState:
+        terminated:
+          containerID: docker://519b12e5d0060455329def68fed03f8f1801cbed8a8f73cf2c4fe86193773a6d
+          exitCode: 2
+          finishedAt: "2026-05-29T11:39:28Z"
+          reason: Error
+          startedAt: "2026-05-29T09:16:13Z"
+      name: kube-proxy
+      ready: true
+      resources: {}
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T11:39:43Z"
+      volumeMounts:
+      - mountPath: /var/lib/kube-proxy
+        name: kube-proxy
+      - mountPath: /run/xtables.lock
+        name: xtables-lock
+      - mountPath: /lib/modules
+        name: lib-modules
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-775hk
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 192.168.49.2
+    podIPs:
+    - ip: 192.168.49.2
+    qosClass: BestEffort
+    startTime: "2026-05-29T09:16:12Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubernetes.io/config.hash: 1c7123a121598343200ffd5b015ca580
+      kubernetes.io/config.mirror: 1c7123a121598343200ffd5b015ca580
+      kubernetes.io/config.seen: "2026-05-29T09:16:00.740308325Z"
+      kubernetes.io/config.source: file
+    creationTimestamp: "2026-05-29T09:16:06Z"
+    generation: 1
+    labels:
+      component: kube-scheduler
+      tier: control-plane
+    name: kube-scheduler-minikube
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: v1
+      controller: true
+      kind: Node
+      name: minikube
+      uid: dcf9b123-4872-4407-b9bc-bbf0ec20464a
+    resourceVersion: "18479"
+    uid: 07b82408-8917-48d0-b059-0887cc043b2a
+  spec:
+    containers:
+    - command:
+      - kube-scheduler
+      - --authentication-kubeconfig=/etc/kubernetes/scheduler.conf
+      - --authorization-kubeconfig=/etc/kubernetes/scheduler.conf
+      - --bind-address=127.0.0.1
+      - --kubeconfig=/etc/kubernetes/scheduler.conf
+      - --leader-elect=false
+      image: registry.k8s.io/kube-scheduler:v1.35.1
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 8
+        httpGet:
+          host: 127.0.0.1
+          path: /livez
+          port: probe-port
+          scheme: HTTPS
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 15
+      name: kube-scheduler
+      ports:
+      - containerPort: 10259
+        hostPort: 10259
+        name: probe-port
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          host: 127.0.0.1
+          path: /readyz
+          port: probe-port
+          scheme: HTTPS
+        periodSeconds: 1
+        successThreshold: 1
+        timeoutSeconds: 15
+      resources:
+        requests:
+          cpu: 100m
+      startupProbe:
+        failureThreshold: 24
+        httpGet:
+          host: 127.0.0.1
+          path: /livez
+          port: probe-port
+          scheme: HTTPS
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 15
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/kubernetes/scheduler.conf
+        name: kubeconfig
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 2000001000
+    priorityClassName: system-node-critical
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      seccompProfile:
+        type: RuntimeDefault
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      operator: Exists
+    volumes:
+    - hostPath:
+        path: /etc/kubernetes/scheduler.conf
+        type: FileOrCreate
+      name: kubeconfig
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:46Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:07Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:40:01Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:40:01Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:07Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 100m
+      containerID: docker://641933857c9b9810fa1e23cdaf309e740c0855e11c5a8526ba81a66d029244b3
+      image: registry.k8s.io/kube-scheduler:v1.35.1
+      imageID: docker-pullable://registry.k8s.io/kube-scheduler@sha256:fc251ed4b8a03830bb8f75fb5fe983b3b0b5cc15a9c066d8f6c5d2e547deece8
+      lastState:
+        terminated:
+          containerID: docker://23051421dfe5f7e515dcfb96516c634ef3de3994e4f691faea4b907e8de10698
+          exitCode: 1
+          finishedAt: "2026-05-29T11:39:29Z"
+          reason: Error
+          startedAt: "2026-05-29T09:16:01Z"
+      name: kube-scheduler
+      ready: true
+      resources:
+        requests:
+          cpu: 100m
+          memory: "0"
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T11:39:43Z"
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    phase: Running
+    podIP: 192.168.49.2
+    podIPs:
+    - ip: 192.168.49.2
+    qosClass: Burstable
+    startTime: "2026-05-29T09:16:07Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","integration-test":"storage-provisioner"},"name":"storage-provisioner","namespace":"kube-system"},"spec":{"containers":[{"command":["/storage-provisioner"],"image":"gcr.io/k8s-minikube/storage-provisioner:v5","imagePullPolicy":"IfNotPresent","name":"storage-provisioner","volumeMounts":[{"mountPath":"/tmp","name":"tmp"}]}],"hostNetwork":true,"serviceAccountName":"storage-provisioner","volumes":[{"hostPath":{"path":"/tmp","type":"Directory"},"name":"tmp"}]}}
+    creationTimestamp: "2026-05-29T09:16:09Z"
+    generation: 1
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      integration-test: storage-provisioner
+    name: storage-provisioner
+    namespace: kube-system
+    resourceVersion: "18380"
+    uid: 04b8e0d4-ff18-4467-88e1-95704fc86bf0
+  spec:
+    containers:
+    - command:
+      - /storage-provisioner
+      image: gcr.io/k8s-minikube/storage-provisioner:v5
+      imagePullPolicy: IfNotPresent
+      name: storage-provisioner
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /tmp
+        name: tmp
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-kztbt
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostNetwork: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: storage-provisioner
+    serviceAccountName: storage-provisioner
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - hostPath:
+        path: /tmp
+        type: Directory
+      name: tmp
+    - name: kube-api-access-kztbt
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:47Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:11Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:47Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T11:39:47Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T09:16:11Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://e0791a5f7bf819b81856fc91cd6f98fbf84f7daa96f27b3d0fc319091a7285f4
+      image: gcr.io/k8s-minikube/storage-provisioner:v5
+      imageID: docker-pullable://gcr.io/k8s-minikube/storage-provisioner@sha256:18eb69d1418e854ad5a19e399310e52808a8321e4c441c1dddad8977a0d7a944
+      lastState:
+        terminated:
+          containerID: docker://39c76acbbf626050801675e150e2bbb4b69a1716a3de92d83eeb9b86c19dddc8
+          exitCode: 2
+          finishedAt: "2026-05-29T11:39:29Z"
+          reason: Error
+          startedAt: "2026-05-29T09:16:43Z"
+      name: storage-provisioner
+      ready: true
+      resources: {}
+      restartCount: 2
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T11:39:45Z"
+      volumeMounts:
+      - mountPath: /tmp
+        name: tmp
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-kztbt
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 192.168.49.2
+    podIPs:
+    - ip: 192.168.49.2
+    qosClass: BestEffort
+    startTime: "2026-05-29T09:16:11Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    generateName: tekton-pipelines-remote-resolvers-59b7b847cd-
+    generation: 1
+    labels:
+      app: tekton-pipelines-resolvers
+      app.kubernetes.io/component: resolvers
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: resolvers
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      pod-template-hash: 59b7b847cd
+      version: v1.6.0
+    name: tekton-pipelines-remote-resolvers-59b7b847cd-247dr
+    namespace: tekton-pipelines-resolvers
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: tekton-pipelines-remote-resolvers-59b7b847cd
+      uid: 45b5908b-7338-4ff2-be4a-6ebba28064ee
+    resourceVersion: "23148"
+    uid: a0168598-7dc1-4c97-8ebd-468a2a5e2322
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/os
+              operator: NotIn
+              values:
+              - windows
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: resolvers
+                app.kubernetes.io/instance: default
+                app.kubernetes.io/name: resolvers
+                app.kubernetes.io/part-of: tekton-pipelines
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+    containers:
+    - command:
+      - /sbin/tini
+      - --
+      - /ko-app/resolvers
+      env:
+      - name: SYSTEM_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: KUBERNETES_MIN_VERSION
+        value: v1.28.0
+      - name: CONFIG_LOGGING_NAME
+        value: config-logging
+      - name: CONFIG_OBSERVABILITY_NAME
+        value: config-observability
+      - name: CONFIG_FEATURE_FLAGS_NAME
+        value: feature-flags
+      - name: CONFIG_LEADERELECTION_NAME
+        value: config-leader-election-resolvers
+      - name: METRICS_DOMAIN
+        value: tekton.dev/resolution
+      - name: PROBES_PORT
+        value: "8080"
+      - name: TEKTON_HUB_API
+      - name: ARTIFACT_HUB_API
+        value: https://artifacthub.io/
+      image: ghcr.io/tektoncd/pipeline/resolvers-ff86b24f130c42b88983d3c13993056d:v1.6.0@sha256:e77cc55c6e507c393be029335c765c6c34238ee48b49379428da3d01713e9293
+      imagePullPolicy: IfNotPresent
+      name: controller
+      ports:
+      - containerPort: 9090
+        name: metrics
+        protocol: TCP
+      - containerPort: 8008
+        name: profiling
+        protocol: TCP
+      - containerPort: 8080
+        name: probes
+        protocol: TCP
+      resources:
+        limits:
+          cpu: "1"
+          memory: 4Gi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /tmp
+        name: tmp-clone-volume
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-fdd75
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: tekton-pipelines-resolvers
+    serviceAccountName: tekton-pipelines-resolvers
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - emptyDir:
+        sizeLimit: 4Gi
+      name: tmp-clone-volume
+    - name: kube-api-access-fdd75
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:10Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:07Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:10Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:10Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:07Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 100m
+        memory: 100Mi
+      containerID: docker://50fa7985be6bb6db1fe131fa0de739672ac448a4d1abcb410a48082a5cd00c41
+      image: sha256:ae17a6155dcf628992718a47f652ec29129418aed971df6bd3f0c9dd7fcb41dd
+      imageID: docker-pullable://ghcr.io/tektoncd/pipeline/resolvers-ff86b24f130c42b88983d3c13993056d@sha256:e77cc55c6e507c393be029335c765c6c34238ee48b49379428da3d01713e9293
+      lastState: {}
+      name: controller
+      ready: true
+      resources:
+        limits:
+          cpu: "1"
+          memory: 4Gi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T12:14:08Z"
+      volumeMounts:
+      - mountPath: /tmp
+        name: tmp-clone-volume
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-fdd75
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.17
+    podIPs:
+    - ip: 10.244.0.17
+    qosClass: Burstable
+    startTime: "2026-05-29T12:14:07Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    generateName: tekton-events-controller-5cbc777ccd-
+    generation: 1
+    labels:
+      app: tekton-events-controller
+      app.kubernetes.io/component: events
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: events
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      pod-template-hash: 5cbc777ccd
+      version: v1.6.0
+    name: tekton-events-controller-5cbc777ccd-85zvt
+    namespace: tekton-pipelines
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: tekton-events-controller-5cbc777ccd
+      uid: 84452441-6884-44f8-874d-ce880ed25720
+    resourceVersion: "23180"
+    uid: a796b2b6-2a50-44f0-8f95-961027b50390
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/os
+              operator: NotIn
+              values:
+              - windows
+    containers:
+    - env:
+      - name: SYSTEM_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: KUBERNETES_MIN_VERSION
+        value: v1.28.0
+      - name: CONFIG_DEFAULTS_NAME
+        value: config-defaults
+      - name: CONFIG_LOGGING_NAME
+        value: config-logging
+      - name: CONFIG_OBSERVABILITY_NAME
+        value: config-observability
+      - name: CONFIG_LEADERELECTION_NAME
+        value: config-leader-election-events
+      - name: SSL_CERT_FILE
+        value: /etc/config-registry-cert/cert
+      - name: SSL_CERT_DIR
+        value: /etc/ssl/certs
+      image: ghcr.io/tektoncd/pipeline/events-a9042f7efb0cbade2a868a1ee5ddd52c:v1.6.0@sha256:a601df6f1ef7f031b004b108eb2d7c215577b3b5231a43fa6b0ae6bf5af31025
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: probes
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      name: tekton-events-controller
+      ports:
+      - containerPort: 9090
+        name: metrics
+        protocol: TCP
+      - containerPort: 8008
+        name: profiling
+        protocol: TCP
+      - containerPort: 8080
+        name: probes
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /readiness
+          port: probes
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      resources: {}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/config-logging
+        name: config-logging
+      - mountPath: /etc/config-registry-cert
+        name: config-registry-cert
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xsvpc
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: tekton-events-controller
+    serviceAccountName: tekton-events-controller
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: config-logging
+      name: config-logging
+    - configMap:
+        defaultMode: 420
+        name: config-registry-cert
+      name: config-registry-cert
+    - name: kube-api-access-xsvpc
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:07Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:20Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:20Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:07Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://252c2df64393e99b8b6862c34bb1149f5f9aeada6ea08e0cff45272eefa8b60f
+      image: sha256:414104855e2cd7f7a5532d9df6b7a44528da4d7230a3017b6c96121379affb1f
+      imageID: docker-pullable://ghcr.io/tektoncd/pipeline/events-a9042f7efb0cbade2a868a1ee5ddd52c@sha256:a601df6f1ef7f031b004b108eb2d7c215577b3b5231a43fa6b0ae6bf5af31025
+      lastState: {}
+      name: tekton-events-controller
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T12:14:08Z"
+      volumeMounts:
+      - mountPath: /etc/config-logging
+        name: config-logging
+      - mountPath: /etc/config-registry-cert
+        name: config-registry-cert
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xsvpc
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.15
+    podIPs:
+    - ip: 10.244.0.15
+    qosClass: BestEffort
+    startTime: "2026-05-29T12:14:07Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    generateName: tekton-pipelines-controller-65f567589b-
+    generation: 1
+    labels:
+      app: tekton-pipelines-controller
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: controller
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      pod-template-hash: 65f567589b
+      version: v1.6.0
+    name: tekton-pipelines-controller-65f567589b-qnznj
+    namespace: tekton-pipelines
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: tekton-pipelines-controller-65f567589b
+      uid: b86ceef2-1ef2-426e-9da1-7310265eebbe
+    resourceVersion: "23186"
+    uid: d6ac75d8-a503-4f59-8864-8788dc2a4585
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/os
+              operator: NotIn
+              values:
+              - windows
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: controller
+                app.kubernetes.io/instance: default
+                app.kubernetes.io/name: controller
+                app.kubernetes.io/part-of: tekton-pipelines
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+    containers:
+    - args:
+      - -entrypoint-image
+      - ghcr.io/tektoncd/pipeline/entrypoint-bff0a22da108bc2f16c818c97641a296:v1.6.0@sha256:255ea8fadab1481fbd1e562d9ac7d4008cd9515de5f952647c8959028c8990a0
+      - -nop-image
+      - ghcr.io/tektoncd/pipeline/nop-8eac7c133edad5df719dc37b36b62482:v1.6.0@sha256:b83fbfa4e59808477d83ad2022f58e1aeff2605c438d37b83fef3b7b3706cb7d
+      - -sidecarlogresults-image
+      - ghcr.io/tektoncd/pipeline/sidecarlogresults-7501c6a20d741631510a448b48ab098f:v1.6.0@sha256:934e82f377c37aa98d42a7f37692a631f1b29a1dd1cc01e1b29b8f402b56b552
+      - -workingdirinit-image
+      - ghcr.io/tektoncd/pipeline/workingdirinit-0c558922ec6a1b739e550e349f2d5fc1:v1.6.0@sha256:2cbe018a0158ca18dfd2edd330ef2d94ab066a994415a835c20a5eac2e0588c5
+      - -shell-image
+      - cgr.dev/chainguard/busybox@sha256:19f02276bf8dbdd62f069b922f10c65262cc34b710eea26ff928129a736be791
+      - -shell-image-win
+      - mcr.microsoft.com/powershell:nanoserver@sha256:b6d5ff841b78bdf2dfed7550000fd4f3437385b8fa686ec0f010be24777654d6
+      env:
+      - name: SYSTEM_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: KUBERNETES_MIN_VERSION
+        value: v1.28.0
+      - name: CONFIG_DEFAULTS_NAME
+        value: config-defaults
+      - name: CONFIG_LOGGING_NAME
+        value: config-logging
+      - name: CONFIG_OBSERVABILITY_NAME
+        value: config-observability
+      - name: CONFIG_FEATURE_FLAGS_NAME
+        value: feature-flags
+      - name: CONFIG_LEADERELECTION_NAME
+        value: config-leader-election-controller
+      - name: CONFIG_SPIRE
+        value: config-spire
+      - name: SSL_CERT_FILE
+        value: /etc/config-registry-cert/cert
+      - name: SSL_CERT_DIR
+        value: /etc/ssl/certs
+      - name: METRICS_DOMAIN
+        value: tekton.dev/pipeline
+      image: ghcr.io/tektoncd/pipeline/controller-10a3e32792f33651396d02b6855a6e36:v1.6.0@sha256:84efabe03a5e5441379171d5c071bc28612aa7656ec4f508b01d89ee431e4141
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: probes
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      name: tekton-pipelines-controller
+      ports:
+      - containerPort: 9090
+        name: metrics
+        protocol: TCP
+      - containerPort: 8008
+        name: profiling
+        protocol: TCP
+      - containerPort: 8080
+        name: probes
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /readiness
+          port: probes
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      resources: {}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/config-logging
+        name: config-logging
+      - mountPath: /etc/config-registry-cert
+        name: config-registry-cert
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cst6r
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: tekton-pipelines-controller
+    serviceAccountName: tekton-pipelines-controller
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: config-logging
+      name: config-logging
+    - configMap:
+        defaultMode: 420
+        name: config-registry-cert
+      name: config-registry-cert
+    - name: kube-api-access-cst6r
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:07Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:21Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:21Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:07Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://d0b0541f1b4f2e26c93d142faf7d97ec76264cf5098ee7c0535a7530a762fef7
+      image: sha256:85ef5651f6d3f09fd3710e242c4e2c1f9cfe00679346e8a131a9104b140fd23b
+      imageID: docker-pullable://ghcr.io/tektoncd/pipeline/controller-10a3e32792f33651396d02b6855a6e36@sha256:84efabe03a5e5441379171d5c071bc28612aa7656ec4f508b01d89ee431e4141
+      lastState: {}
+      name: tekton-pipelines-controller
+      ready: true
+      resources: {}
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T12:14:08Z"
+      volumeMounts:
+      - mountPath: /etc/config-logging
+        name: config-logging
+      - mountPath: /etc/config-registry-cert
+        name: config-registry-cert
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cst6r
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.16
+    podIPs:
+    - ip: 10.244.0.16
+    qosClass: BestEffort
+    startTime: "2026-05-29T12:14:07Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-05-29T12:14:08Z"
+    generateName: tekton-pipelines-webhook-75cd84877-
+    generation: 1
+    labels:
+      app: tekton-pipelines-webhook
+      app.kubernetes.io/component: webhook
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: webhook
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      pod-template-hash: 75cd84877
+      version: v1.6.0
+    name: tekton-pipelines-webhook-75cd84877-nl988
+    namespace: tekton-pipelines
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: tekton-pipelines-webhook-75cd84877
+      uid: 81101c8f-a2ae-45c9-8597-8bef5dc06a7d
+    resourceVersion: "23192"
+    uid: d2c90571-89a9-4bdb-9d2d-970d1845ce2b
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/os
+              operator: NotIn
+              values:
+              - windows
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: webhook
+                app.kubernetes.io/instance: default
+                app.kubernetes.io/name: webhook
+                app.kubernetes.io/part-of: tekton-pipelines
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+    containers:
+    - env:
+      - name: SYSTEM_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: KUBERNETES_MIN_VERSION
+        value: v1.28.0
+      - name: CONFIG_LOGGING_NAME
+        value: config-logging
+      - name: CONFIG_OBSERVABILITY_NAME
+        value: config-observability
+      - name: CONFIG_LEADERELECTION_NAME
+        value: config-leader-election-webhook
+      - name: CONFIG_FEATURE_FLAGS_NAME
+        value: feature-flags
+      - name: PROBES_PORT
+        value: "8080"
+      - name: WEBHOOK_PORT
+        value: "8443"
+      - name: WEBHOOK_ADMISSION_CONTROLLER_NAME
+        value: webhook.pipeline.tekton.dev
+      - name: WEBHOOK_SERVICE_NAME
+        value: tekton-pipelines-webhook
+      - name: WEBHOOK_SECRET_NAME
+        value: webhook-certs
+      - name: METRICS_DOMAIN
+        value: tekton.dev/pipeline
+      image: ghcr.io/tektoncd/pipeline/webhook-d4749e605405422fd87700164e31b2d1:v1.6.0@sha256:c326a2f5c4988abcfd67b5a8edd5525da2110f2b8d3f6c50c27f8d25a721e566
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: probes
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      name: webhook
+      ports:
+      - containerPort: 9090
+        name: metrics
+        protocol: TCP
+      - containerPort: 8008
+        name: profiling
+        protocol: TCP
+      - containerPort: 8443
+        name: https-webhook
+        protocol: TCP
+      - containerPort: 8080
+        name: probes
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /readiness
+          port: probes
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      resources:
+        limits:
+          cpu: 500m
+          memory: 500Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        readOnlyRootFilesystem: true
+        runAsGroup: 65532
+        runAsNonRoot: true
+        runAsUser: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-542rl
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: tekton-pipelines-webhook
+    serviceAccountName: tekton-pipelines-webhook
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-542rl
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:10Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:08Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:22Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:22Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-29T12:14:08Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 100m
+        memory: 100Mi
+      containerID: docker://785ed702ef2074e37255a18e6747bc7d62153a93ffee95f2a742eb7895e92cd4
+      image: sha256:8b6c5d434794e2c27d499ff5cf2966669127b65c1fb7d6d4adc37da98a2890b8
+      imageID: docker-pullable://ghcr.io/tektoncd/pipeline/webhook-d4749e605405422fd87700164e31b2d1@sha256:c326a2f5c4988abcfd67b5a8edd5525da2110f2b8d3f6c50c27f8d25a721e566
+      lastState: {}
+      name: webhook
+      ready: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 500Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-29T12:14:09Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-542rl
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 192.168.49.2
+    hostIPs:
+    - ip: 192.168.49.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.18
+    podIPs:
+    - ip: 10.244.0.18
+    qosClass: Burstable
+    startTime: "2026-05-29T12:14:08Z"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-05-29T09:16:06Z"
+    labels:
+      component: apiserver
+      provider: kubernetes
+    name: kubernetes
+    namespace: default
+    resourceVersion: "211"
+    uid: 14f3250c-b230-4155-87ae-67ec359ad240
+  spec:
+    clusterIP: 10.96.0.1
+    clusterIPs:
+    - 10.96.0.1
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8443
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/port: "9153"
+      prometheus.io/scrape: "true"
+    creationTimestamp: "2026-05-29T09:16:07Z"
+    labels:
+      k8s-app: kube-dns
+      kubernetes.io/cluster-service: "true"
+      kubernetes.io/name: CoreDNS
+    name: kube-dns
+    namespace: kube-system
+    resourceVersion: "244"
+    uid: dc8c78d2-6b61-43e0-a0b6-a5b881241ae3
+  spec:
+    clusterIP: 10.96.0.10
+    clusterIPs:
+    - 10.96.0.10
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: dns
+      port: 53
+      protocol: UDP
+      targetPort: 53
+    - name: dns-tcp
+      port: 53
+      protocol: TCP
+      targetPort: 53
+    - name: metrics
+      port: 9153
+      protocol: TCP
+      targetPort: 9153
+    selector:
+      k8s-app: kube-dns
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"tekton-pipelines-remote-resolvers","app.kubernetes.io/component":"resolvers","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"resolvers","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"},"name":"tekton-pipelines-remote-resolvers","namespace":"tekton-pipelines-resolvers"},"spec":{"ports":[{"name":"http-metrics","port":9090,"protocol":"TCP","targetPort":9090},{"name":"http-profiling","port":8008,"targetPort":8008},{"name":"probes","port":8080}],"selector":{"app.kubernetes.io/component":"resolvers","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"resolvers","app.kubernetes.io/part-of":"tekton-pipelines"}}}
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    labels:
+      app: tekton-pipelines-remote-resolvers
+      app.kubernetes.io/component: resolvers
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: resolvers
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      version: v1.6.0
+    name: tekton-pipelines-remote-resolvers
+    namespace: tekton-pipelines-resolvers
+    resourceVersion: "23062"
+    uid: 817b1d47-74e7-4ef0-9359-a90782538bfd
+  spec:
+    clusterIP: 10.100.131.177
+    clusterIPs:
+    - 10.100.131.177
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http-metrics
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    - name: http-profiling
+      port: 8008
+      protocol: TCP
+      targetPort: 8008
+    - name: probes
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app.kubernetes.io/component: resolvers
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: resolvers
+      app.kubernetes.io/part-of: tekton-pipelines
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"tekton-events-controller","app.kubernetes.io/component":"events","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"events","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"},"name":"tekton-events-controller","namespace":"tekton-pipelines"},"spec":{"ports":[{"name":"http-metrics","port":9090,"protocol":"TCP","targetPort":9090},{"name":"http-profiling","port":8008,"targetPort":8008},{"name":"probes","port":8080}],"selector":{"app.kubernetes.io/component":"events","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"events","app.kubernetes.io/part-of":"tekton-pipelines"}}}
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    labels:
+      app: tekton-events-controller
+      app.kubernetes.io/component: events
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: events
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      version: v1.6.0
+    name: tekton-events-controller
+    namespace: tekton-pipelines
+    resourceVersion: "23025"
+    uid: d926a7ea-6869-4baa-abbf-1285a7235da7
+  spec:
+    clusterIP: 10.100.60.102
+    clusterIPs:
+    - 10.100.60.102
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http-metrics
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    - name: http-profiling
+      port: 8008
+      protocol: TCP
+      targetPort: 8008
+    - name: probes
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app.kubernetes.io/component: events
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: events
+      app.kubernetes.io/part-of: tekton-pipelines
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"tekton-pipelines-controller","app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"controller","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"},"name":"tekton-pipelines-controller","namespace":"tekton-pipelines"},"spec":{"ports":[{"name":"http-metrics","port":9090,"protocol":"TCP","targetPort":9090},{"name":"http-profiling","port":8008,"targetPort":8008},{"name":"probes","port":8080}],"selector":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"controller","app.kubernetes.io/part-of":"tekton-pipelines"}}}
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    labels:
+      app: tekton-pipelines-controller
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: controller
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      version: v1.6.0
+    name: tekton-pipelines-controller
+    namespace: tekton-pipelines
+    resourceVersion: "23009"
+    uid: 22c290aa-56a4-435c-972e-641996d8f65b
+  spec:
+    clusterIP: 10.96.106.54
+    clusterIPs:
+    - 10.96.106.54
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http-metrics
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    - name: http-profiling
+      port: 8008
+      protocol: TCP
+      targetPort: 8008
+    - name: probes
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: controller
+      app.kubernetes.io/part-of: tekton-pipelines
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"tekton-pipelines-webhook","app.kubernetes.io/component":"webhook","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"webhook","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"},"name":"tekton-pipelines-webhook","namespace":"tekton-pipelines"},"spec":{"ports":[{"name":"http-metrics","port":9090,"targetPort":"metrics"},{"name":"http-profiling","port":8008,"targetPort":"profiling"},{"name":"https-webhook","port":443,"targetPort":"https-webhook"},{"name":"probes","port":8080,"targetPort":"probes"}],"selector":{"app.kubernetes.io/component":"webhook","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"webhook","app.kubernetes.io/part-of":"tekton-pipelines"}}}
+    creationTimestamp: "2026-05-29T12:14:08Z"
+    labels:
+      app: tekton-pipelines-webhook
+      app.kubernetes.io/component: webhook
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: webhook
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      version: v1.6.0
+    name: tekton-pipelines-webhook
+    namespace: tekton-pipelines
+    resourceVersion: "23083"
+    uid: 3779eb80-52a7-43b8-814e-ea673423c971
+  spec:
+    clusterIP: 10.106.242.78
+    clusterIPs:
+    - 10.106.242.78
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http-metrics
+      port: 9090
+      protocol: TCP
+      targetPort: metrics
+    - name: http-profiling
+      port: 8008
+      protocol: TCP
+      targetPort: profiling
+    - name: https-webhook
+      port: 443
+      protocol: TCP
+      targetPort: https-webhook
+    - name: probes
+      port: 8080
+      protocol: TCP
+      targetPort: probes
+    selector:
+      app.kubernetes.io/component: webhook
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: webhook
+      app.kubernetes.io/part-of: tekton-pipelines
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1
+  kind: DaemonSet
+  metadata:
+    annotations:
+      deprecated.daemonset.template.generation: "1"
+    creationTimestamp: "2026-05-29T09:16:07Z"
+    generation: 1
+    labels:
+      k8s-app: kube-proxy
+    name: kube-proxy
+    namespace: kube-system
+    resourceVersion: "367"
+    uid: 5377c059-ac32-4d63-9429-61820bd7c29d
+  spec:
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        k8s-app: kube-proxy
+    template:
+      metadata:
+        labels:
+          k8s-app: kube-proxy
+      spec:
+        containers:
+        - command:
+          - /usr/local/bin/kube-proxy
+          - --config=/var/lib/kube-proxy/config.conf
+          - --hostname-override=$(NODE_NAME)
+          env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          image: registry.k8s.io/kube-proxy:v1.35.1
+          imagePullPolicy: IfNotPresent
+          name: kube-proxy
+          resources: {}
+          securityContext:
+            privileged: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/kube-proxy
+            name: kube-proxy
+          - mountPath: /run/xtables.lock
+            name: xtables-lock
+          - mountPath: /lib/modules
+            name: lib-modules
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        hostNetwork: true
+        nodeSelector:
+          kubernetes.io/os: linux
+        priorityClassName: system-node-critical
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: kube-proxy
+        serviceAccountName: kube-proxy
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - operator: Exists
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: kube-proxy
+          name: kube-proxy
+        - hostPath:
+            path: /run/xtables.lock
+            type: FileOrCreate
+          name: xtables-lock
+        - hostPath:
+            path: /lib/modules
+            type: ""
+          name: lib-modules
+    updateStrategy:
+      rollingUpdate:
+        maxSurge: 0
+        maxUnavailable: 1
+      type: RollingUpdate
+  status:
+    currentNumberScheduled: 1
+    desiredNumberScheduled: 1
+    numberAvailable: 1
+    numberMisscheduled: 0
+    numberReady: 1
+    observedGeneration: 1
+    updatedNumberScheduled: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-05-29T09:16:07Z"
+    generation: 2
+    labels:
+      k8s-app: kube-dns
+    name: coredns
+    namespace: kube-system
+    resourceVersion: "388"
+    uid: c778e72b-c7dd-46bc-bcee-1a6d1b9f5d61
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        k8s-app: kube-dns
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          k8s-app: kube-dns
+      spec:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: k8s-app
+                    operator: In
+                    values:
+                    - kube-dns
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - args:
+          - -conf
+          - /etc/coredns/Corefile
+          image: registry.k8s.io/coredns/coredns:v1.13.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: liveness-probe
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: coredns
+          ports:
+          - containerPort: 53
+            name: dns
+            protocol: UDP
+          - containerPort: 53
+            name: dns-tcp
+            protocol: TCP
+          - containerPort: 9153
+            name: metrics
+            protocol: TCP
+          - containerPort: 8080
+            name: liveness-probe
+            protocol: TCP
+          - containerPort: 8181
+            name: readiness-probe
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: readiness-probe
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 170Mi
+            requests:
+              cpu: 100m
+              memory: 70Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+              - NET_BIND_SERVICE
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/coredns
+            name: config-volume
+            readOnly: true
+        dnsPolicy: Default
+        nodeSelector:
+          kubernetes.io/os: linux
+        priorityClassName: system-cluster-critical
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: coredns
+        serviceAccountName: coredns
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: Corefile
+              path: Corefile
+            name: coredns
+          name: config-volume
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-05-29T09:16:12Z"
+      lastUpdateTime: "2026-05-29T09:16:12Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-05-29T09:16:12Z"
+      lastUpdateTime: "2026-05-29T09:16:19Z"
+      message: ReplicaSet "coredns-7d764666f9" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"resolvers","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"resolvers","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"},"name":"tekton-pipelines-remote-resolvers","namespace":"tekton-pipelines-resolvers"},"spec":{"replicas":1,"selector":{"matchLabels":{"app.kubernetes.io/component":"resolvers","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"resolvers","app.kubernetes.io/part-of":"tekton-pipelines"}},"template":{"metadata":{"labels":{"app":"tekton-pipelines-resolvers","app.kubernetes.io/component":"resolvers","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"resolvers","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"}},"spec":{"affinity":{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"kubernetes.io/os","operator":"NotIn","values":["windows"]}]}]}},"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchLabels":{"app.kubernetes.io/component":"resolvers","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"resolvers","app.kubernetes.io/part-of":"tekton-pipelines"}},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}},"containers":[{"args":[],"command":["/sbin/tini","--","/ko-app/resolvers"],"env":[{"name":"SYSTEM_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}},{"name":"KUBERNETES_MIN_VERSION","value":"v1.28.0"},{"name":"CONFIG_LOGGING_NAME","value":"config-logging"},{"name":"CONFIG_OBSERVABILITY_NAME","value":"config-observability"},{"name":"CONFIG_FEATURE_FLAGS_NAME","value":"feature-flags"},{"name":"CONFIG_LEADERELECTION_NAME","value":"config-leader-election-resolvers"},{"name":"METRICS_DOMAIN","value":"tekton.dev/resolution"},{"name":"PROBES_PORT","value":"8080"},{"name":"TEKTON_HUB_API","value":""},{"name":"ARTIFACT_HUB_API","value":"https://artifacthub.io/"}],"image":"ghcr.io/tektoncd/pipeline/resolvers-ff86b24f130c42b88983d3c13993056d:v1.6.0@sha256:e77cc55c6e507c393be029335c765c6c34238ee48b49379428da3d01713e9293","name":"controller","ports":[{"containerPort":9090,"name":"metrics"},{"containerPort":8008,"name":"profiling"},{"containerPort":8080,"name":"probes"}],"resources":{"limits":{"cpu":"1000m","memory":"4Gi"},"requests":{"cpu":"100m","memory":"100Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":65532,"seccompProfile":{"type":"RuntimeDefault"}},"volumeMounts":[{"mountPath":"/tmp","name":"tmp-clone-volume"}]}],"serviceAccountName":"tekton-pipelines-resolvers","volumes":[{"emptyDir":{"sizeLimit":"4Gi"},"name":"tmp-clone-volume"}]}}}}
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: resolvers
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: resolvers
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      version: v1.6.0
+    name: tekton-pipelines-remote-resolvers
+    namespace: tekton-pipelines-resolvers
+    resourceVersion: "23153"
+    uid: 0a90c57b-c052-4452-aaff-a76ff0b2ad07
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: resolvers
+        app.kubernetes.io/instance: default
+        app.kubernetes.io/name: resolvers
+        app.kubernetes.io/part-of: tekton-pipelines
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: tekton-pipelines-resolvers
+          app.kubernetes.io/component: resolvers
+          app.kubernetes.io/instance: default
+          app.kubernetes.io/name: resolvers
+          app.kubernetes.io/part-of: tekton-pipelines
+          app.kubernetes.io/version: v1.6.0
+          pipeline.tekton.dev/release: v1.6.0
+          version: v1.6.0
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/os
+                  operator: NotIn
+                  values:
+                  - windows
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: resolvers
+                    app.kubernetes.io/instance: default
+                    app.kubernetes.io/name: resolvers
+                    app.kubernetes.io/part-of: tekton-pipelines
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - command:
+          - /sbin/tini
+          - --
+          - /ko-app/resolvers
+          env:
+          - name: SYSTEM_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: KUBERNETES_MIN_VERSION
+            value: v1.28.0
+          - name: CONFIG_LOGGING_NAME
+            value: config-logging
+          - name: CONFIG_OBSERVABILITY_NAME
+            value: config-observability
+          - name: CONFIG_FEATURE_FLAGS_NAME
+            value: feature-flags
+          - name: CONFIG_LEADERELECTION_NAME
+            value: config-leader-election-resolvers
+          - name: METRICS_DOMAIN
+            value: tekton.dev/resolution
+          - name: PROBES_PORT
+            value: "8080"
+          - name: TEKTON_HUB_API
+          - name: ARTIFACT_HUB_API
+            value: https://artifacthub.io/
+          image: ghcr.io/tektoncd/pipeline/resolvers-ff86b24f130c42b88983d3c13993056d:v1.6.0@sha256:e77cc55c6e507c393be029335c765c6c34238ee48b49379428da3d01713e9293
+          imagePullPolicy: IfNotPresent
+          name: controller
+          ports:
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8008
+            name: profiling
+            protocol: TCP
+          - containerPort: 8080
+            name: probes
+            protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 4Gi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /tmp
+            name: tmp-clone-volume
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: tekton-pipelines-resolvers
+        serviceAccountName: tekton-pipelines-resolvers
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir:
+            sizeLimit: 4Gi
+          name: tmp-clone-volume
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-05-29T12:14:10Z"
+      lastUpdateTime: "2026-05-29T12:14:10Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-05-29T12:14:07Z"
+      lastUpdateTime: "2026-05-29T12:14:10Z"
+      message: ReplicaSet "tekton-pipelines-remote-resolvers-59b7b847cd" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"events","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"events","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"},"name":"tekton-events-controller","namespace":"tekton-pipelines"},"spec":{"replicas":1,"selector":{"matchLabels":{"app.kubernetes.io/component":"events","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"events","app.kubernetes.io/part-of":"tekton-pipelines"}},"template":{"metadata":{"labels":{"app":"tekton-events-controller","app.kubernetes.io/component":"events","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"events","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"}},"spec":{"affinity":{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"kubernetes.io/os","operator":"NotIn","values":["windows"]}]}]}}},"containers":[{"args":[],"env":[{"name":"SYSTEM_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}},{"name":"KUBERNETES_MIN_VERSION","value":"v1.28.0"},{"name":"CONFIG_DEFAULTS_NAME","value":"config-defaults"},{"name":"CONFIG_LOGGING_NAME","value":"config-logging"},{"name":"CONFIG_OBSERVABILITY_NAME","value":"config-observability"},{"name":"CONFIG_LEADERELECTION_NAME","value":"config-leader-election-events"},{"name":"SSL_CERT_FILE","value":"/etc/config-registry-cert/cert"},{"name":"SSL_CERT_DIR","value":"/etc/ssl/certs"}],"image":"ghcr.io/tektoncd/pipeline/events-a9042f7efb0cbade2a868a1ee5ddd52c:v1.6.0@sha256:a601df6f1ef7f031b004b108eb2d7c215577b3b5231a43fa6b0ae6bf5af31025","livenessProbe":{"httpGet":{"path":"/health","port":"probes","scheme":"HTTP"},"initialDelaySeconds":5,"periodSeconds":10,"timeoutSeconds":5},"name":"tekton-events-controller","ports":[{"containerPort":9090,"name":"metrics"},{"containerPort":8008,"name":"profiling"},{"containerPort":8080,"name":"probes"}],"readinessProbe":{"httpGet":{"path":"/readiness","port":"probes","scheme":"HTTP"},"initialDelaySeconds":5,"periodSeconds":10,"timeoutSeconds":5},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532,"seccompProfile":{"type":"RuntimeDefault"}},"volumeMounts":[{"mountPath":"/etc/config-logging","name":"config-logging"},{"mountPath":"/etc/config-registry-cert","name":"config-registry-cert"}]}],"serviceAccountName":"tekton-events-controller","volumes":[{"configMap":{"name":"config-logging"},"name":"config-logging"},{"configMap":{"name":"config-registry-cert"},"name":"config-registry-cert"}]}}}}
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: events
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: events
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      version: v1.6.0
+    name: tekton-events-controller
+    namespace: tekton-pipelines
+    resourceVersion: "23184"
+    uid: c5efe43d-409b-4a1c-bbd0-875a3fd7d597
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: events
+        app.kubernetes.io/instance: default
+        app.kubernetes.io/name: events
+        app.kubernetes.io/part-of: tekton-pipelines
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: tekton-events-controller
+          app.kubernetes.io/component: events
+          app.kubernetes.io/instance: default
+          app.kubernetes.io/name: events
+          app.kubernetes.io/part-of: tekton-pipelines
+          app.kubernetes.io/version: v1.6.0
+          pipeline.tekton.dev/release: v1.6.0
+          version: v1.6.0
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/os
+                  operator: NotIn
+                  values:
+                  - windows
+        containers:
+        - env:
+          - name: SYSTEM_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: KUBERNETES_MIN_VERSION
+            value: v1.28.0
+          - name: CONFIG_DEFAULTS_NAME
+            value: config-defaults
+          - name: CONFIG_LOGGING_NAME
+            value: config-logging
+          - name: CONFIG_OBSERVABILITY_NAME
+            value: config-observability
+          - name: CONFIG_LEADERELECTION_NAME
+            value: config-leader-election-events
+          - name: SSL_CERT_FILE
+            value: /etc/config-registry-cert/cert
+          - name: SSL_CERT_DIR
+            value: /etc/ssl/certs
+          image: ghcr.io/tektoncd/pipeline/events-a9042f7efb0cbade2a868a1ee5ddd52c:v1.6.0@sha256:a601df6f1ef7f031b004b108eb2d7c215577b3b5231a43fa6b0ae6bf5af31025
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: tekton-events-controller
+          ports:
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8008
+            name: profiling
+            protocol: TCP
+          - containerPort: 8080
+            name: probes
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /readiness
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/config-logging
+            name: config-logging
+          - mountPath: /etc/config-registry-cert
+            name: config-registry-cert
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: tekton-events-controller
+        serviceAccountName: tekton-events-controller
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: config-logging
+          name: config-logging
+        - configMap:
+            defaultMode: 420
+            name: config-registry-cert
+          name: config-registry-cert
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-05-29T12:14:20Z"
+      lastUpdateTime: "2026-05-29T12:14:20Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-05-29T12:14:07Z"
+      lastUpdateTime: "2026-05-29T12:14:20Z"
+      message: ReplicaSet "tekton-events-controller-5cbc777ccd" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"controller","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"},"name":"tekton-pipelines-controller","namespace":"tekton-pipelines"},"spec":{"replicas":1,"selector":{"matchLabels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"controller","app.kubernetes.io/part-of":"tekton-pipelines"}},"template":{"metadata":{"labels":{"app":"tekton-pipelines-controller","app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"controller","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"}},"spec":{"affinity":{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"kubernetes.io/os","operator":"NotIn","values":["windows"]}]}]}},"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchLabels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"controller","app.kubernetes.io/part-of":"tekton-pipelines"}},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}},"containers":[{"args":["-entrypoint-image","ghcr.io/tektoncd/pipeline/entrypoint-bff0a22da108bc2f16c818c97641a296:v1.6.0@sha256:255ea8fadab1481fbd1e562d9ac7d4008cd9515de5f952647c8959028c8990a0","-nop-image","ghcr.io/tektoncd/pipeline/nop-8eac7c133edad5df719dc37b36b62482:v1.6.0@sha256:b83fbfa4e59808477d83ad2022f58e1aeff2605c438d37b83fef3b7b3706cb7d","-sidecarlogresults-image","ghcr.io/tektoncd/pipeline/sidecarlogresults-7501c6a20d741631510a448b48ab098f:v1.6.0@sha256:934e82f377c37aa98d42a7f37692a631f1b29a1dd1cc01e1b29b8f402b56b552","-workingdirinit-image","ghcr.io/tektoncd/pipeline/workingdirinit-0c558922ec6a1b739e550e349f2d5fc1:v1.6.0@sha256:2cbe018a0158ca18dfd2edd330ef2d94ab066a994415a835c20a5eac2e0588c5","-shell-image","cgr.dev/chainguard/busybox@sha256:19f02276bf8dbdd62f069b922f10c65262cc34b710eea26ff928129a736be791","-shell-image-win","mcr.microsoft.com/powershell:nanoserver@sha256:b6d5ff841b78bdf2dfed7550000fd4f3437385b8fa686ec0f010be24777654d6"],"env":[{"name":"SYSTEM_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}},{"name":"KUBERNETES_MIN_VERSION","value":"v1.28.0"},{"name":"CONFIG_DEFAULTS_NAME","value":"config-defaults"},{"name":"CONFIG_LOGGING_NAME","value":"config-logging"},{"name":"CONFIG_OBSERVABILITY_NAME","value":"config-observability"},{"name":"CONFIG_FEATURE_FLAGS_NAME","value":"feature-flags"},{"name":"CONFIG_LEADERELECTION_NAME","value":"config-leader-election-controller"},{"name":"CONFIG_SPIRE","value":"config-spire"},{"name":"SSL_CERT_FILE","value":"/etc/config-registry-cert/cert"},{"name":"SSL_CERT_DIR","value":"/etc/ssl/certs"},{"name":"METRICS_DOMAIN","value":"tekton.dev/pipeline"}],"image":"ghcr.io/tektoncd/pipeline/controller-10a3e32792f33651396d02b6855a6e36:v1.6.0@sha256:84efabe03a5e5441379171d5c071bc28612aa7656ec4f508b01d89ee431e4141","livenessProbe":{"httpGet":{"path":"/health","port":"probes","scheme":"HTTP"},"initialDelaySeconds":5,"periodSeconds":10,"timeoutSeconds":5},"name":"tekton-pipelines-controller","ports":[{"containerPort":9090,"name":"metrics"},{"containerPort":8008,"name":"profiling"},{"containerPort":8080,"name":"probes"}],"readinessProbe":{"httpGet":{"path":"/readiness","port":"probes","scheme":"HTTP"},"initialDelaySeconds":5,"periodSeconds":10,"timeoutSeconds":5},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532,"seccompProfile":{"type":"RuntimeDefault"}},"volumeMounts":[{"mountPath":"/etc/config-logging","name":"config-logging"},{"mountPath":"/etc/config-registry-cert","name":"config-registry-cert"}]}],"serviceAccountName":"tekton-pipelines-controller","volumes":[{"configMap":{"name":"config-logging"},"name":"config-logging"},{"configMap":{"name":"config-registry-cert"},"name":"config-registry-cert"}]}}}}
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: controller
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      version: v1.6.0
+    name: tekton-pipelines-controller
+    namespace: tekton-pipelines
+    resourceVersion: "23190"
+    uid: f3b7e06a-645e-4f4c-9a84-69ce3db2303d
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/instance: default
+        app.kubernetes.io/name: controller
+        app.kubernetes.io/part-of: tekton-pipelines
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: tekton-pipelines-controller
+          app.kubernetes.io/component: controller
+          app.kubernetes.io/instance: default
+          app.kubernetes.io/name: controller
+          app.kubernetes.io/part-of: tekton-pipelines
+          app.kubernetes.io/version: v1.6.0
+          pipeline.tekton.dev/release: v1.6.0
+          version: v1.6.0
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/os
+                  operator: NotIn
+                  values:
+                  - windows
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: controller
+                    app.kubernetes.io/instance: default
+                    app.kubernetes.io/name: controller
+                    app.kubernetes.io/part-of: tekton-pipelines
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - args:
+          - -entrypoint-image
+          - ghcr.io/tektoncd/pipeline/entrypoint-bff0a22da108bc2f16c818c97641a296:v1.6.0@sha256:255ea8fadab1481fbd1e562d9ac7d4008cd9515de5f952647c8959028c8990a0
+          - -nop-image
+          - ghcr.io/tektoncd/pipeline/nop-8eac7c133edad5df719dc37b36b62482:v1.6.0@sha256:b83fbfa4e59808477d83ad2022f58e1aeff2605c438d37b83fef3b7b3706cb7d
+          - -sidecarlogresults-image
+          - ghcr.io/tektoncd/pipeline/sidecarlogresults-7501c6a20d741631510a448b48ab098f:v1.6.0@sha256:934e82f377c37aa98d42a7f37692a631f1b29a1dd1cc01e1b29b8f402b56b552
+          - -workingdirinit-image
+          - ghcr.io/tektoncd/pipeline/workingdirinit-0c558922ec6a1b739e550e349f2d5fc1:v1.6.0@sha256:2cbe018a0158ca18dfd2edd330ef2d94ab066a994415a835c20a5eac2e0588c5
+          - -shell-image
+          - cgr.dev/chainguard/busybox@sha256:19f02276bf8dbdd62f069b922f10c65262cc34b710eea26ff928129a736be791
+          - -shell-image-win
+          - mcr.microsoft.com/powershell:nanoserver@sha256:b6d5ff841b78bdf2dfed7550000fd4f3437385b8fa686ec0f010be24777654d6
+          env:
+          - name: SYSTEM_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: KUBERNETES_MIN_VERSION
+            value: v1.28.0
+          - name: CONFIG_DEFAULTS_NAME
+            value: config-defaults
+          - name: CONFIG_LOGGING_NAME
+            value: config-logging
+          - name: CONFIG_OBSERVABILITY_NAME
+            value: config-observability
+          - name: CONFIG_FEATURE_FLAGS_NAME
+            value: feature-flags
+          - name: CONFIG_LEADERELECTION_NAME
+            value: config-leader-election-controller
+          - name: CONFIG_SPIRE
+            value: config-spire
+          - name: SSL_CERT_FILE
+            value: /etc/config-registry-cert/cert
+          - name: SSL_CERT_DIR
+            value: /etc/ssl/certs
+          - name: METRICS_DOMAIN
+            value: tekton.dev/pipeline
+          image: ghcr.io/tektoncd/pipeline/controller-10a3e32792f33651396d02b6855a6e36:v1.6.0@sha256:84efabe03a5e5441379171d5c071bc28612aa7656ec4f508b01d89ee431e4141
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: tekton-pipelines-controller
+          ports:
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8008
+            name: profiling
+            protocol: TCP
+          - containerPort: 8080
+            name: probes
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /readiness
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/config-logging
+            name: config-logging
+          - mountPath: /etc/config-registry-cert
+            name: config-registry-cert
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: tekton-pipelines-controller
+        serviceAccountName: tekton-pipelines-controller
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: config-logging
+          name: config-logging
+        - configMap:
+            defaultMode: 420
+            name: config-registry-cert
+          name: config-registry-cert
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-05-29T12:14:21Z"
+      lastUpdateTime: "2026-05-29T12:14:21Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-05-29T12:14:07Z"
+      lastUpdateTime: "2026-05-29T12:14:21Z"
+      message: ReplicaSet "tekton-pipelines-controller-65f567589b" has successfully
+        progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"webhook","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"webhook","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"},"name":"tekton-pipelines-webhook","namespace":"tekton-pipelines"},"spec":{"selector":{"matchLabels":{"app.kubernetes.io/component":"webhook","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"webhook","app.kubernetes.io/part-of":"tekton-pipelines"}},"template":{"metadata":{"labels":{"app":"tekton-pipelines-webhook","app.kubernetes.io/component":"webhook","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"webhook","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"}},"spec":{"affinity":{"nodeAffinity":{"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"kubernetes.io/os","operator":"NotIn","values":["windows"]}]}]}},"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchLabels":{"app.kubernetes.io/component":"webhook","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"webhook","app.kubernetes.io/part-of":"tekton-pipelines"}},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}},"containers":[{"env":[{"name":"SYSTEM_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}},{"name":"KUBERNETES_MIN_VERSION","value":"v1.28.0"},{"name":"CONFIG_LOGGING_NAME","value":"config-logging"},{"name":"CONFIG_OBSERVABILITY_NAME","value":"config-observability"},{"name":"CONFIG_LEADERELECTION_NAME","value":"config-leader-election-webhook"},{"name":"CONFIG_FEATURE_FLAGS_NAME","value":"feature-flags"},{"name":"PROBES_PORT","value":"8080"},{"name":"WEBHOOK_PORT","value":"8443"},{"name":"WEBHOOK_ADMISSION_CONTROLLER_NAME","value":"webhook.pipeline.tekton.dev"},{"name":"WEBHOOK_SERVICE_NAME","value":"tekton-pipelines-webhook"},{"name":"WEBHOOK_SECRET_NAME","value":"webhook-certs"},{"name":"METRICS_DOMAIN","value":"tekton.dev/pipeline"}],"image":"ghcr.io/tektoncd/pipeline/webhook-d4749e605405422fd87700164e31b2d1:v1.6.0@sha256:c326a2f5c4988abcfd67b5a8edd5525da2110f2b8d3f6c50c27f8d25a721e566","livenessProbe":{"httpGet":{"path":"/health","port":"probes","scheme":"HTTP"},"initialDelaySeconds":5,"periodSeconds":10,"timeoutSeconds":5},"name":"webhook","ports":[{"containerPort":9090,"name":"metrics"},{"containerPort":8008,"name":"profiling"},{"containerPort":8443,"name":"https-webhook"},{"containerPort":8080,"name":"probes"}],"readinessProbe":{"httpGet":{"path":"/readiness","port":"probes","scheme":"HTTP"},"initialDelaySeconds":5,"periodSeconds":10,"timeoutSeconds":5},"resources":{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"100Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true,"runAsGroup":65532,"runAsNonRoot":true,"runAsUser":65532,"seccompProfile":{"type":"RuntimeDefault"}}}],"serviceAccountName":"tekton-pipelines-webhook"}}}}
+    creationTimestamp: "2026-05-29T12:14:08Z"
+    generation: 1
+    labels:
+      app.kubernetes.io/component: webhook
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: webhook
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      version: v1.6.0
+    name: tekton-pipelines-webhook
+    namespace: tekton-pipelines
+    resourceVersion: "23196"
+    uid: 76046aa2-3b24-4c6e-926c-d8b98b8c35af
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: webhook
+        app.kubernetes.io/instance: default
+        app.kubernetes.io/name: webhook
+        app.kubernetes.io/part-of: tekton-pipelines
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: tekton-pipelines-webhook
+          app.kubernetes.io/component: webhook
+          app.kubernetes.io/instance: default
+          app.kubernetes.io/name: webhook
+          app.kubernetes.io/part-of: tekton-pipelines
+          app.kubernetes.io/version: v1.6.0
+          pipeline.tekton.dev/release: v1.6.0
+          version: v1.6.0
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/os
+                  operator: NotIn
+                  values:
+                  - windows
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: webhook
+                    app.kubernetes.io/instance: default
+                    app.kubernetes.io/name: webhook
+                    app.kubernetes.io/part-of: tekton-pipelines
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - env:
+          - name: SYSTEM_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: KUBERNETES_MIN_VERSION
+            value: v1.28.0
+          - name: CONFIG_LOGGING_NAME
+            value: config-logging
+          - name: CONFIG_OBSERVABILITY_NAME
+            value: config-observability
+          - name: CONFIG_LEADERELECTION_NAME
+            value: config-leader-election-webhook
+          - name: CONFIG_FEATURE_FLAGS_NAME
+            value: feature-flags
+          - name: PROBES_PORT
+            value: "8080"
+          - name: WEBHOOK_PORT
+            value: "8443"
+          - name: WEBHOOK_ADMISSION_CONTROLLER_NAME
+            value: webhook.pipeline.tekton.dev
+          - name: WEBHOOK_SERVICE_NAME
+            value: tekton-pipelines-webhook
+          - name: WEBHOOK_SECRET_NAME
+            value: webhook-certs
+          - name: METRICS_DOMAIN
+            value: tekton.dev/pipeline
+          image: ghcr.io/tektoncd/pipeline/webhook-d4749e605405422fd87700164e31b2d1:v1.6.0@sha256:c326a2f5c4988abcfd67b5a8edd5525da2110f2b8d3f6c50c27f8d25a721e566
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: webhook
+          ports:
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8008
+            name: profiling
+            protocol: TCP
+          - containerPort: 8443
+            name: https-webhook
+            protocol: TCP
+          - containerPort: 8080
+            name: probes
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /readiness
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: tekton-pipelines-webhook
+        serviceAccountName: tekton-pipelines-webhook
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-05-29T12:14:22Z"
+      lastUpdateTime: "2026-05-29T12:14:22Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-05-29T12:14:08Z"
+      lastUpdateTime: "2026-05-29T12:14:22Z"
+      message: ReplicaSet "tekton-pipelines-webhook-75cd84877" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-05-29T09:16:12Z"
+    generation: 1
+    labels:
+      k8s-app: kube-dns
+      pod-template-hash: 7d764666f9
+    name: coredns-7d764666f9
+    namespace: kube-system
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: coredns
+      uid: c778e72b-c7dd-46bc-bcee-1a6d1b9f5d61
+    resourceVersion: "387"
+    uid: b470600f-bcaf-42f2-935a-7eca0f82f834
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        k8s-app: kube-dns
+        pod-template-hash: 7d764666f9
+    template:
+      metadata:
+        labels:
+          k8s-app: kube-dns
+          pod-template-hash: 7d764666f9
+      spec:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: k8s-app
+                    operator: In
+                    values:
+                    - kube-dns
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - args:
+          - -conf
+          - /etc/coredns/Corefile
+          image: registry.k8s.io/coredns/coredns:v1.13.1
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /health
+              port: liveness-probe
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: coredns
+          ports:
+          - containerPort: 53
+            name: dns
+            protocol: UDP
+          - containerPort: 53
+            name: dns-tcp
+            protocol: TCP
+          - containerPort: 9153
+            name: metrics
+            protocol: TCP
+          - containerPort: 8080
+            name: liveness-probe
+            protocol: TCP
+          - containerPort: 8181
+            name: readiness-probe
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /ready
+              port: readiness-probe
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 170Mi
+            requests:
+              cpu: 100m
+              memory: 70Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+              - NET_BIND_SERVICE
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/coredns
+            name: config-volume
+            readOnly: true
+        dnsPolicy: Default
+        nodeSelector:
+          kubernetes.io/os: linux
+        priorityClassName: system-cluster-critical
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: coredns
+        serviceAccountName: coredns
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+        volumes:
+        - configMap:
+            defaultMode: 420
+            items:
+            - key: Corefile
+              path: Corefile
+            name: coredns
+          name: config-volume
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    generation: 1
+    labels:
+      app: tekton-pipelines-resolvers
+      app.kubernetes.io/component: resolvers
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: resolvers
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      pod-template-hash: 59b7b847cd
+      version: v1.6.0
+    name: tekton-pipelines-remote-resolvers-59b7b847cd
+    namespace: tekton-pipelines-resolvers
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: tekton-pipelines-remote-resolvers
+      uid: 0a90c57b-c052-4452-aaff-a76ff0b2ad07
+    resourceVersion: "23149"
+    uid: 45b5908b-7338-4ff2-be4a-6ebba28064ee
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: resolvers
+        app.kubernetes.io/instance: default
+        app.kubernetes.io/name: resolvers
+        app.kubernetes.io/part-of: tekton-pipelines
+        pod-template-hash: 59b7b847cd
+    template:
+      metadata:
+        labels:
+          app: tekton-pipelines-resolvers
+          app.kubernetes.io/component: resolvers
+          app.kubernetes.io/instance: default
+          app.kubernetes.io/name: resolvers
+          app.kubernetes.io/part-of: tekton-pipelines
+          app.kubernetes.io/version: v1.6.0
+          pipeline.tekton.dev/release: v1.6.0
+          pod-template-hash: 59b7b847cd
+          version: v1.6.0
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/os
+                  operator: NotIn
+                  values:
+                  - windows
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: resolvers
+                    app.kubernetes.io/instance: default
+                    app.kubernetes.io/name: resolvers
+                    app.kubernetes.io/part-of: tekton-pipelines
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - command:
+          - /sbin/tini
+          - --
+          - /ko-app/resolvers
+          env:
+          - name: SYSTEM_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: KUBERNETES_MIN_VERSION
+            value: v1.28.0
+          - name: CONFIG_LOGGING_NAME
+            value: config-logging
+          - name: CONFIG_OBSERVABILITY_NAME
+            value: config-observability
+          - name: CONFIG_FEATURE_FLAGS_NAME
+            value: feature-flags
+          - name: CONFIG_LEADERELECTION_NAME
+            value: config-leader-election-resolvers
+          - name: METRICS_DOMAIN
+            value: tekton.dev/resolution
+          - name: PROBES_PORT
+            value: "8080"
+          - name: TEKTON_HUB_API
+          - name: ARTIFACT_HUB_API
+            value: https://artifacthub.io/
+          image: ghcr.io/tektoncd/pipeline/resolvers-ff86b24f130c42b88983d3c13993056d:v1.6.0@sha256:e77cc55c6e507c393be029335c765c6c34238ee48b49379428da3d01713e9293
+          imagePullPolicy: IfNotPresent
+          name: controller
+          ports:
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8008
+            name: profiling
+            protocol: TCP
+          - containerPort: 8080
+            name: probes
+            protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 4Gi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /tmp
+            name: tmp-clone-volume
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: tekton-pipelines-resolvers
+        serviceAccountName: tekton-pipelines-resolvers
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir:
+            sizeLimit: 4Gi
+          name: tmp-clone-volume
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    generation: 1
+    labels:
+      app: tekton-events-controller
+      app.kubernetes.io/component: events
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: events
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      pod-template-hash: 5cbc777ccd
+      version: v1.6.0
+    name: tekton-events-controller-5cbc777ccd
+    namespace: tekton-pipelines
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: tekton-events-controller
+      uid: c5efe43d-409b-4a1c-bbd0-875a3fd7d597
+    resourceVersion: "23182"
+    uid: 84452441-6884-44f8-874d-ce880ed25720
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: events
+        app.kubernetes.io/instance: default
+        app.kubernetes.io/name: events
+        app.kubernetes.io/part-of: tekton-pipelines
+        pod-template-hash: 5cbc777ccd
+    template:
+      metadata:
+        labels:
+          app: tekton-events-controller
+          app.kubernetes.io/component: events
+          app.kubernetes.io/instance: default
+          app.kubernetes.io/name: events
+          app.kubernetes.io/part-of: tekton-pipelines
+          app.kubernetes.io/version: v1.6.0
+          pipeline.tekton.dev/release: v1.6.0
+          pod-template-hash: 5cbc777ccd
+          version: v1.6.0
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/os
+                  operator: NotIn
+                  values:
+                  - windows
+        containers:
+        - env:
+          - name: SYSTEM_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: KUBERNETES_MIN_VERSION
+            value: v1.28.0
+          - name: CONFIG_DEFAULTS_NAME
+            value: config-defaults
+          - name: CONFIG_LOGGING_NAME
+            value: config-logging
+          - name: CONFIG_OBSERVABILITY_NAME
+            value: config-observability
+          - name: CONFIG_LEADERELECTION_NAME
+            value: config-leader-election-events
+          - name: SSL_CERT_FILE
+            value: /etc/config-registry-cert/cert
+          - name: SSL_CERT_DIR
+            value: /etc/ssl/certs
+          image: ghcr.io/tektoncd/pipeline/events-a9042f7efb0cbade2a868a1ee5ddd52c:v1.6.0@sha256:a601df6f1ef7f031b004b108eb2d7c215577b3b5231a43fa6b0ae6bf5af31025
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: tekton-events-controller
+          ports:
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8008
+            name: profiling
+            protocol: TCP
+          - containerPort: 8080
+            name: probes
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /readiness
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/config-logging
+            name: config-logging
+          - mountPath: /etc/config-registry-cert
+            name: config-registry-cert
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: tekton-events-controller
+        serviceAccountName: tekton-events-controller
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: config-logging
+          name: config-logging
+        - configMap:
+            defaultMode: 420
+            name: config-registry-cert
+          name: config-registry-cert
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    generation: 1
+    labels:
+      app: tekton-pipelines-controller
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: controller
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      pod-template-hash: 65f567589b
+      version: v1.6.0
+    name: tekton-pipelines-controller-65f567589b
+    namespace: tekton-pipelines
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: tekton-pipelines-controller
+      uid: f3b7e06a-645e-4f4c-9a84-69ce3db2303d
+    resourceVersion: "23188"
+    uid: b86ceef2-1ef2-426e-9da1-7310265eebbe
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/instance: default
+        app.kubernetes.io/name: controller
+        app.kubernetes.io/part-of: tekton-pipelines
+        pod-template-hash: 65f567589b
+    template:
+      metadata:
+        labels:
+          app: tekton-pipelines-controller
+          app.kubernetes.io/component: controller
+          app.kubernetes.io/instance: default
+          app.kubernetes.io/name: controller
+          app.kubernetes.io/part-of: tekton-pipelines
+          app.kubernetes.io/version: v1.6.0
+          pipeline.tekton.dev/release: v1.6.0
+          pod-template-hash: 65f567589b
+          version: v1.6.0
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/os
+                  operator: NotIn
+                  values:
+                  - windows
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: controller
+                    app.kubernetes.io/instance: default
+                    app.kubernetes.io/name: controller
+                    app.kubernetes.io/part-of: tekton-pipelines
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - args:
+          - -entrypoint-image
+          - ghcr.io/tektoncd/pipeline/entrypoint-bff0a22da108bc2f16c818c97641a296:v1.6.0@sha256:255ea8fadab1481fbd1e562d9ac7d4008cd9515de5f952647c8959028c8990a0
+          - -nop-image
+          - ghcr.io/tektoncd/pipeline/nop-8eac7c133edad5df719dc37b36b62482:v1.6.0@sha256:b83fbfa4e59808477d83ad2022f58e1aeff2605c438d37b83fef3b7b3706cb7d
+          - -sidecarlogresults-image
+          - ghcr.io/tektoncd/pipeline/sidecarlogresults-7501c6a20d741631510a448b48ab098f:v1.6.0@sha256:934e82f377c37aa98d42a7f37692a631f1b29a1dd1cc01e1b29b8f402b56b552
+          - -workingdirinit-image
+          - ghcr.io/tektoncd/pipeline/workingdirinit-0c558922ec6a1b739e550e349f2d5fc1:v1.6.0@sha256:2cbe018a0158ca18dfd2edd330ef2d94ab066a994415a835c20a5eac2e0588c5
+          - -shell-image
+          - cgr.dev/chainguard/busybox@sha256:19f02276bf8dbdd62f069b922f10c65262cc34b710eea26ff928129a736be791
+          - -shell-image-win
+          - mcr.microsoft.com/powershell:nanoserver@sha256:b6d5ff841b78bdf2dfed7550000fd4f3437385b8fa686ec0f010be24777654d6
+          env:
+          - name: SYSTEM_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: KUBERNETES_MIN_VERSION
+            value: v1.28.0
+          - name: CONFIG_DEFAULTS_NAME
+            value: config-defaults
+          - name: CONFIG_LOGGING_NAME
+            value: config-logging
+          - name: CONFIG_OBSERVABILITY_NAME
+            value: config-observability
+          - name: CONFIG_FEATURE_FLAGS_NAME
+            value: feature-flags
+          - name: CONFIG_LEADERELECTION_NAME
+            value: config-leader-election-controller
+          - name: CONFIG_SPIRE
+            value: config-spire
+          - name: SSL_CERT_FILE
+            value: /etc/config-registry-cert/cert
+          - name: SSL_CERT_DIR
+            value: /etc/ssl/certs
+          - name: METRICS_DOMAIN
+            value: tekton.dev/pipeline
+          image: ghcr.io/tektoncd/pipeline/controller-10a3e32792f33651396d02b6855a6e36:v1.6.0@sha256:84efabe03a5e5441379171d5c071bc28612aa7656ec4f508b01d89ee431e4141
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: tekton-pipelines-controller
+          ports:
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8008
+            name: profiling
+            protocol: TCP
+          - containerPort: 8080
+            name: probes
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /readiness
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/config-logging
+            name: config-logging
+          - mountPath: /etc/config-registry-cert
+            name: config-registry-cert
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: tekton-pipelines-controller
+        serviceAccountName: tekton-pipelines-controller
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: config-logging
+          name: config-logging
+        - configMap:
+            defaultMode: 420
+            name: config-registry-cert
+          name: config-registry-cert
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-05-29T12:14:08Z"
+    generation: 1
+    labels:
+      app: tekton-pipelines-webhook
+      app.kubernetes.io/component: webhook
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: webhook
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      pod-template-hash: 75cd84877
+      version: v1.6.0
+    name: tekton-pipelines-webhook-75cd84877
+    namespace: tekton-pipelines
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: tekton-pipelines-webhook
+      uid: 76046aa2-3b24-4c6e-926c-d8b98b8c35af
+    resourceVersion: "23194"
+    uid: 81101c8f-a2ae-45c9-8597-8bef5dc06a7d
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: webhook
+        app.kubernetes.io/instance: default
+        app.kubernetes.io/name: webhook
+        app.kubernetes.io/part-of: tekton-pipelines
+        pod-template-hash: 75cd84877
+    template:
+      metadata:
+        labels:
+          app: tekton-pipelines-webhook
+          app.kubernetes.io/component: webhook
+          app.kubernetes.io/instance: default
+          app.kubernetes.io/name: webhook
+          app.kubernetes.io/part-of: tekton-pipelines
+          app.kubernetes.io/version: v1.6.0
+          pipeline.tekton.dev/release: v1.6.0
+          pod-template-hash: 75cd84877
+          version: v1.6.0
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/os
+                  operator: NotIn
+                  values:
+                  - windows
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/component: webhook
+                    app.kubernetes.io/instance: default
+                    app.kubernetes.io/name: webhook
+                    app.kubernetes.io/part-of: tekton-pipelines
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - env:
+          - name: SYSTEM_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: KUBERNETES_MIN_VERSION
+            value: v1.28.0
+          - name: CONFIG_LOGGING_NAME
+            value: config-logging
+          - name: CONFIG_OBSERVABILITY_NAME
+            value: config-observability
+          - name: CONFIG_LEADERELECTION_NAME
+            value: config-leader-election-webhook
+          - name: CONFIG_FEATURE_FLAGS_NAME
+            value: feature-flags
+          - name: PROBES_PORT
+            value: "8080"
+          - name: WEBHOOK_PORT
+            value: "8443"
+          - name: WEBHOOK_ADMISSION_CONTROLLER_NAME
+            value: webhook.pipeline.tekton.dev
+          - name: WEBHOOK_SERVICE_NAME
+            value: tekton-pipelines-webhook
+          - name: WEBHOOK_SECRET_NAME
+            value: webhook-certs
+          - name: METRICS_DOMAIN
+            value: tekton.dev/pipeline
+          image: ghcr.io/tektoncd/pipeline/webhook-d4749e605405422fd87700164e31b2d1:v1.6.0@sha256:c326a2f5c4988abcfd67b5a8edd5525da2110f2b8d3f6c50c27f8d25a721e566
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: webhook
+          ports:
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          - containerPort: 8008
+            name: profiling
+            protocol: TCP
+          - containerPort: 8443
+            name: https-webhook
+            protocol: TCP
+          - containerPort: 8080
+            name: probes
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /readiness
+              port: probes
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: tekton-pipelines-webhook
+        serviceAccountName: tekton-pipelines-webhook
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: autoscaling/v2
+  kind: HorizontalPodAutoscaler
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"autoscaling/v2","kind":"HorizontalPodAutoscaler","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"webhook","app.kubernetes.io/instance":"default","app.kubernetes.io/name":"webhook","app.kubernetes.io/part-of":"tekton-pipelines","app.kubernetes.io/version":"v1.6.0","pipeline.tekton.dev/release":"v1.6.0","version":"v1.6.0"},"name":"tekton-pipelines-webhook","namespace":"tekton-pipelines"},"spec":{"maxReplicas":5,"metrics":[{"resource":{"name":"cpu","target":{"averageUtilization":100,"type":"Utilization"}},"type":"Resource"}],"minReplicas":1,"scaleTargetRef":{"apiVersion":"apps/v1","kind":"Deployment","name":"tekton-pipelines-webhook"}}}
+    creationTimestamp: "2026-05-29T12:14:07Z"
+    labels:
+      app.kubernetes.io/component: webhook
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: webhook
+      app.kubernetes.io/part-of: tekton-pipelines
+      app.kubernetes.io/version: v1.6.0
+      pipeline.tekton.dev/release: v1.6.0
+      version: v1.6.0
+    name: tekton-pipelines-webhook
+    namespace: tekton-pipelines
+    resourceVersion: "23198"
+    uid: ade5612f-a053-4d3a-b8d2-b29656d1e30b
+  spec:
+    maxReplicas: 5
+    metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 100
+          type: Utilization
+      type: Resource
+    minReplicas: 1
+    scaleTargetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: tekton-pipelines-webhook
+  status:
+    conditions:
+    - lastTransitionTime: "2026-05-29T12:14:23Z"
+      message: the HPA controller was able to get the target's current scale
+      reason: SucceededGetScale
+      status: "True"
+      type: AbleToScale
+    - lastTransitionTime: "2026-05-29T12:14:23Z"
+      message: 'the HPA was unable to compute the replica count: failed to get cpu
+        utilization: unable to get metrics for resource cpu: unable to fetch metrics
+        from resource metrics API: the server could not find the requested resource
+        (get pods.metrics.k8s.io)'
+      reason: FailedGetResourceMetric
+      status: "False"
+      type: ScalingActive
+    currentMetrics:
+    - type: ""
+    currentReplicas: 1
+    desiredReplicas: 0
+kind: List
+metadata:
+  resourceVersion: ""
