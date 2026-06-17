@@ -13,9 +13,10 @@ spec:
       labels:
         app: payment
     spec:
+      imagePullSecrets:
+      - name: ecr-secret
       containers:
       - name: payment
-        image: 643327307650.dkr.ecr.us-east-1.amazonaws.com/k8s-services/repo/payment-service:latest
-        imagePullPolicy: Never
+        image: 643327307650.dkr.ecr.us-east-1.amazonaws.com/k8s-service/api-service:latest
         ports:
         - containerPort: 5001
