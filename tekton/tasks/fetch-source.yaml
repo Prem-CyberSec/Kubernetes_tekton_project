@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: fetch-source
+  namespace: dev
+spec:
+  steps:
+    - name: clone
+      image: alpine/git
+      script: |
+        git clone https://github.com/Prem-CyberSec/Kubernetes_tekton_project.git && git pull origin Phase_3

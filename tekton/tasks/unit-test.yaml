@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: unit-test
+  namespace: dev
+spec:
+  steps:
+    - name: run-tests
+      image: python:3.9
+      workingDir: /workspace
+      script: |
+        pip install -r auth-service/requirements.txt
+        pytest auth-service

@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: pipeline-run-1
+  namespace: dev
+spec:
+  pipelineRef:
+    name: devsecops-pipeline
+
+  params:
+    - name: IMAGE
+      value: :730335281328.dkr.ecr.us-east-1.amazonaws.com/k8s-services/auth-deployment:latest
+
+  serviceAccountName: pipeline-sa

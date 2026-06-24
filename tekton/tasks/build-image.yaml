@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: build-auth-image
+  namespace: dev
+spec:
+  params:
+    - name: IMAGE
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:latest
+      env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: ecr-secret
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ecr-secret
+              key: AWS_SECRET_ACCESS_KEY
+        - name: AWS_DEFAULT_REGION
+          value: ap-east-1
+      args:
+        - "--dockerfile=/home/ubuntu/Kubernetes_tekton_project/auth-service/Dockerfile"
+        - "--context=/home/ubuntu/Kubernetes_tekton_project/auth-service"
+        - "--destination=$(params.IMAGE)"

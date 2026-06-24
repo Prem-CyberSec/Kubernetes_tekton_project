@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: devsecops-pipeline
+  namespace: dev
+spec:
+  params:
+    - name: IMAGE
+
+  tasks:
+    - name: fetch
+      taskRef:
+        name: fetch-source
+
+    - name: build
+      taskRef:
+        name: build-auth-image
+      params:
+        - name: IMAGE
+          value: $(params.IMAGE)
+      runAfter:
+        - fetch
+
+    - name: test
+      taskRef:
+        name: unit-test
+      runAfter:
+        - build
