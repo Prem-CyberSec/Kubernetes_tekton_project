@@ -4,6 +4,8 @@ metadata:
   name: devsecops-pipeline
   namespace: dev
 spec:
+  workspaces:
+    - name: shared-workspace
   params:
     - name: IMAGE
 
@@ -11,10 +13,15 @@ spec:
     - name: fetch
       taskRef:
         name: fetch-source
-
+      workspaces:
+        - name: shared-workspace
+          workspace: shared-workspace 
     - name: build
       taskRef:
         name: build-auth-image
+      workspaces: 
+        - name: shared-workspace
+          workspace: shared-workspace
       params:
         - name: IMAGE
           value: $(params.IMAGE)

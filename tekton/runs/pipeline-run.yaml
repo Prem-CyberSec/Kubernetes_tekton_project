@@ -4,6 +4,9 @@ metadata:
   name: pipeline-run-1
   namespace: dev
 spec:
+  workspace: 
+    - name: shared-workspace
+      emptyDir: {}
   pipelineRef:
     name: devsecops-pipeline
 

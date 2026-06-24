@@ -4,8 +4,14 @@ metadata:
   name: fetch-source
   namespace: dev
 spec:
+  workspace: 
+    - name: shared-workspace
   steps:
     - name: clone
+      workingDir: /workspace/shared-workspace
       image: alpine/git
       script: |
         git clone https://github.com/Prem-CyberSec/Kubernetes_tekton_project.git
+        echo "===== WORKSPACE CONTENT ====="
+        ls -R /workspace
+

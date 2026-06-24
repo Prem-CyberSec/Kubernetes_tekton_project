@@ -4,11 +4,14 @@ metadata:
   name: build-auth-image
   namespace: dev
 spec:
+  workspaces:
+    - name: shared-workspace
   params:
     - name: IMAGE
   steps:
     - name: build-and-push
       image: gcr.io/kaniko-project/executor:latest
+      worksingDir: /workspace/shared-workspace
       env:
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
