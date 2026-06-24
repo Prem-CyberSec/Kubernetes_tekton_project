@@ -1,10 +1,10 @@
-apiVersion: tekton.dev/v1beta
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: fetch-source
   namespace: dev
 spec:
-  workspace: 
+  workspaces: 
     - name: shared-workspace
   steps:
     - name: clone

@@ -11,7 +11,7 @@ spec:
   steps:
     - name: build-and-push
       image: gcr.io/kaniko-project/executor:latest
-      worksingDir: /workspace/shared-workspace
+      workingDir: /workspace/shared-workspace
       env:
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
