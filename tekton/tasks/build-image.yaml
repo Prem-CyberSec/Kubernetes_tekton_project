@@ -21,8 +21,8 @@ spec:
               name: ecr-secret
               key: AWS_SECRET_ACCESS_KEY
         - name: AWS_DEFAULT_REGION
-          value: ap-east-1
+          value: us-east-1
       args:
-        - "--dockerfile=/home/ubuntu/Kubernetes_tekton_project/auth-service/Dockerfile"
-        - "--context=/home/ubuntu/Kubernetes_tekton_project/auth-service"
+        - "--dockerfile=/workspace/Kubernetes_tekton_project/auth-service/Dockerfile"
+        - "--context=/workspace/Kubernetes_tekton_project/auth-service"
         - "--destination=$(params.IMAGE)"

@@ -8,4 +8,4 @@ spec:
     - name: clone
       image: alpine/git
       script: |
-        git clone https://github.com/Prem-CyberSec/Kubernetes_tekton_project.git && git pull origin Phase_3
+        git clone https://github.com/Prem-CyberSec/Kubernetes_tekton_project.git

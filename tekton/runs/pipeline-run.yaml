@@ -9,6 +9,6 @@ spec:
 
   params:
     - name: IMAGE
-      value: :730335281328.dkr.ecr.us-east-1.amazonaws.com/k8s-services/auth-deployment:latest
+      value: 730335281328.dkr.ecr.us-east-1.amazonaws.com/k8s-services/auth-deployment:latest
 
   serviceAccountName: pipeline-sa
