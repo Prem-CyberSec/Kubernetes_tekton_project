@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1
+apiVersion: tekton.dev/v1beta
 kind: Task
 metadata:
   name: fetch-source
