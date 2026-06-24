@@ -26,6 +26,6 @@ spec:
         - name: AWS_DEFAULT_REGION
           value: us-east-1
       args:
-        - "--dockerfile=Kubernetes_tekton_project/auth-service/Dockerfile"
-        - "--context=Kubernetes_tekton_project/auth-service"
+        - "--dockerfile=/workspace/shared-workspace/Kubernetes_tekton_project/auth-service/Dockerfile"
+        - "--context=workspace/shared-workspace/Kubernetes_tekton_project/auth-service"
         - "--destination=$(params.IMAGE)"
