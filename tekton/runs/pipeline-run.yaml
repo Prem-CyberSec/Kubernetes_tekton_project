@@ -6,7 +6,8 @@ metadata:
 spec:
   workspaces: 
     - name: shared-workspace
-      emptyDir: {}
+      persistentVolumeClaim:
+        claimName: pipeline-pvc
   pipelineRef:
     name: devsecops-pipeline
 
