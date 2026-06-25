@@ -17,6 +17,6 @@ spec:
       - name: ecr-secret
       containers:
       - name: payment
-        image: 643327307650.dkr.ecr.us-east-1.amazonaws.com/k8s-service/api-service:latest
+        image:951296734763.dkr.ecr.us-east-1.amazonaws.com/k8s-service/api-service:latest
         ports:
         - containerPort: 5001
